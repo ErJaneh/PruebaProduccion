@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @author Gabriel Araya Ruiz
+    @version 1.0
+    @since 1.0
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:ace="http://www.icefaces.org/icefaces/components"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <head>
+        <title>Promociones</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>       
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/>
+
+    </head>
+    <body>
+        <ui:include src="MenuPrincipal.xhtml"/>
+
+<!-- *********************************************************************************************************************************************** -->
+<!-- DataTable que muestra las promociones existentes -->
+<!-- *********************************************************************************************************************************************** -->
+        <br/>
+
+        <h:form id="form-dataTable-Promociones" rendered="#{promocionesController.view == 1}">            
+            <center><div><table><tr><td> 
+                                
+                <ace:dataTable id="dataTablePromociones" 
+                    value="#{promocionesController.listaPromociones}" 
+                    rows="10" var="item"
+                    paginator="true" styleClass="textTabla" 
+                    paginatorPosition="bottom" selectionMode="multiple"
+                    style="font-size: 10pt">
+
+                    <ace:column id="codigo_promocion" headerText="Codigo Promocion" sortBy="#{item.codigoPromocion}" filterBy="#{item.codigoPromocion}" filterMatchMode="contains">
+                        <h:outputText id="codigo_promocion_Cell" value="#{item.codigoPromocion}"/>
+                    </ace:column>
+
+                    <ace:column id="descripcion" headerText="Descripcion" sortBy="#{item.descripcionPromocion}" filterBy="#{item.descripcionPromocion}" filterMatchMode="contains">
+                        <h:outputText id="descripcion_Cell" value="#{item.descripcionPromocion}"/>
+                    </ace:column>
+                                
+                    <ace:column id="grupo_interes" headerText="Grupo de Intéres" sortBy="#{item.codigoGrupoDeInteres}" filterBy="#{item.codigoGrupoDeInteres}" filterMatchMode="contains">
+                        <h:outputText id="grupo_intres_Cell" value="#{item.codigoGrupoDeInteres}"/>
+                    </ace:column>
+                                
+                    <ace:column id="unidad_academica" headerText="Unidad Academica" sortBy="#{item.codigoUnidadAcademica}" filterBy="#{item.codigoUnidadAcademica}" filterMatchMode="contains">
+                        <h:outputText id="unidad_academica_Cell" value="#{item.codigoUnidadAcademica}"/>
+                    </ace:column>                              
+                                
+                    <ace:column id="estado" headerText="Estado" sortBy="#{item.estadoPromocion}" filterBy="#{item.estadoPromocion}" filterMatchMode="contains">
+                        <h:outputText id="estado_promocion_Cell" value="#{item.estadoPromocion}"/>
+                    </ace:column>
+                    
+                    <ace:column id="mostrarDatosPromocion" headerText="Detalle">
+                        <ace:pushButton id="showModal" value="mostrar" type="button" style="font-size: 10px">
+                            <f:setPropertyActionListener value="#{item}" target="#{promocionesController.promocionBean}"/>
+                            <ace:ajax execute="@this" render="@all" onStart="ice.ace.instance('dialog-detalle-promocion').show(); return true;" />
+                        </ace:pushButton>
+                    </ace:column>
+
+                </ace:dataTable>                
+                                
+            </td></tr></table></div></center>
+        </h:form>
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+        
+<!-- *********************************************************************************************************************************************** -->
+<!-- Dialog que muestra el detalle de la promocion y ademas permite edición DE = Detalle  ED = Edición-->
+<!-- *********************************************************************************************************************************************** -->        
+        
+        <ace:dialog id="dialog-detalle-promocion" header="Detalle Promocion" modal="true" showEffect="clip" hideEffect="fade" width="1000"  draggable="false" closable="false" >    
+            <h:form id="form-detalle"> 
+
+                <div style="text-align: right">
+                    <ace:pushButton type="button" style='background:url("../../images/edit.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{promocionesController.habilitaEdicion}" rendered="#{promocionesController.switchMostrar}">
+                        <f:setPropertyActionListener value="#{promocionesController.promocionBean}" target="#{promocionesController.promocionBean}"/>
+                        <ace:ajax execute="@all" render="@all"/>
+                    </ace:pushButton>
+                    <ace:pushButton type="button" style='background:url("../../images/save.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{promocionesController.actualizarPromocion}" rendered="#{promocionesController.switchEditar}">
+                        <ace:ajax execute="@all" render="@all"/>
+                    </ace:pushButton>    
+                    <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{promocionesController.deshabilitaEdicion}" rendered="#{promocionesController.switchMostrar}">
+                        <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('dialog-detalle-promocion').hide(); return true;"/>
+                    </ace:pushButton>   
+                    <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{promocionesController.deshabilitaEdicion}" rendered="#{promocionesController.switchEditar}">
+                    </ace:pushButton> 
+                </div>
+                    
+                <br/>
+                
+                <ace:panel> 
+                    
+                    <!-- Input para mostrar código de promoción -->  
+                    <h:panelGrid columns="1" width="100%">
+                    <ace:textEntry value="#{promocionesController.promocionBean.codigoPromocion}" disabled="true" label="Promocion:" labelPosition="top" style='width:25%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    </h:panelGrid>
+                    
+                    <h:panelGrid columns="1" width="100%">
+                        <ace:textEntry value="#{promocionesController.promocionBean.estadoPromocion}" rendered="#{promocionesController.switchMostrar}" disabled="true" label="Estado de promocion:" labelPosition="top" style='width:25%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:comboBox id="ED-comboEstadosPromocion" value="#{promocionesController.promocionBean.estadoPromocion}"
+                                      label="Estado de promocion: " labelPosition="top" width="240" style="height:25px;font-size:10pt"
+                                      rendered="#{promocionesController.switchEditar}">
+                            <f:selectItem itemValue="Disponible para inscripción" itemLabel="Disponible para inscripción" />
+                            <f:selectItem itemValue="Deshabilitado" itemLabel="Deshabilitado" />
+                            <ace:ajax execute="@this" render="@this" />
+                        </ace:comboBox>
+                    </h:panelGrid>
+                    
+                    <!-- PanelGrid que agrupa de Grupos de Interés,Periodos y Escuelas para mostrar y editar--> 
+                    <h:panelGrid columns="6" width="100%">
+                       
+                        <ace:textEntry value="#{promocionesController.promocionBean.codigoGrupoDeInteres}" disabled="true" label="Grupo de Interés: " labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{promocionesController.promocionBean.codigoPeriodo}" rendered="#{promocionesController.switchMostrar}" disabled="true" label="Periodo: " labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{promocionesController.promocionBean.codigoUnidadAcademica}" rendered="#{promocionesController.switchMostrar}" disabled="true" label="Unidad Academica: " labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        
+                        <!-- ComboBox que muestra todos los periodos -->
+                        <ace:comboBox id="ED-comboPeriodos" itemValue="#{per.codigo}" value="#{promocionesController.promocionBean.codigoPeriodo}" 
+                                      listVar="per" listValue="#{promocionesController.listaPeriodos}" label="Periodo: " 
+                                      labelPosition="top" width="300" style="height:30px;font-size:10pt" rendered="#{promocionesController.switchEditar}" filterMatchMode="contains">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{per.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="form-detalle:ED-comboPeriodos" render="form-detalle:ED-comboPeriodos" />
+                        </ace:comboBox>
+                        
+                        <!-- ComboBox que muestra todos los escuelas -->                       
+                        <ace:comboBox id="ED-comboEscuelas" value="#{promocionesController.promocionBean.codigoUnidadAcademica}" itemValue="#{esc.codigo}" 
+                                      listVar="esc" listValue="#{promocionesController.listaEscuelas}" label="Unidad academica: " labelPosition="top" 
+                                      width="300" style="height:30px;font-size:10pt" rendered="#{promocionesController.switchEditar}" filterMatchMode="contains">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{esc.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="form-detalle:ED-comboEscuelas" render="form-detalle:ED-comboEscuelas" />
+                        </ace:comboBox>     
+                    </h:panelGrid>
+                                       
+                    <!-- PanelGrid que agrupa input de Fecha inicio y Fecha fin -->
+                    <h:panelGrid columns="2" columnClasses="col50">
+                        <ace:dateTimeEntry id="ED-fechaInicioInput" value="#{promocionesController.promocionBean.fechaInicioPromocion}"
+                                           pattern="MMM/dd/yyyy" navigator="true" locale="es"
+                                           readOnlyInputText="true" renderAsPopup="true"
+                                           label="Fecha Inicio:" labelPosition="top"
+                                           style='height:20px; font-size: 11pt; margin-top: 10px'
+                                           disabled="#{promocionesController.switchMostrar}"> 
+                            <ace:ajax execute="form-detalle:ED-fechaInicioInput" render="form-detalle:ED-fechaInicioInput"/>
+                        </ace:dateTimeEntry>
+                    
+                        <ace:dateTimeEntry id="ED-fechaFinInput" value="#{promocionesController.promocionBean.fechaFinPromocion}"
+                                           pattern="MMM/dd/yyyy" navigator="true" locale="es"
+                                           readOnlyInputText="true" renderAsPopup="true"
+                                           label="Fecha Final:" labelPosition="top"
+                                           style='height:20px; font-size: 11pt; margin-top: 10px; margin-bottom: 10px'
+                                           disabled="#{promocionesController.switchMostrar}">                                      
+                            <ace:ajax execute="form-detalle:ED-fechaFinInput" render="form-detalle:ED-fechaFinInput"/>
+                        </ace:dateTimeEntry>      
+                    </h:panelGrid>                  
+        
+                    <!-- TextArea para la descripcion de la promoción -->
+                    <ace:textAreaEntry id="ED-descripcionInput" disabled="#{promocionesController.switchMostrar}" label="Descripción:" value="#{promocionesController.promocionBean.descripcionPromocion}" labelPosition="top" required="true" indicatorPosition="right" style="width: 65%; height:70px; font-size: 11pt;">
+                        <ace:ajax execute="form-detalle:descripcionInput" render="form-detalle:descripcionInput"/>
+                    </ace:textAreaEntry>
+   
+                </ace:panel>     
+                    
+                <br/>
+                
+                <ace:panel header="Carreras">
+                                                         
+                <!-- DataTable para mostrar las carreras que posee la promoción -->
+                <div><table><tr><td>                                
+                    <ace:dataTable  id="DE-dataTableCarrerasPromocion" 
+                                    value="#{promocionesController.promocionBean.carrerasPromocion}" 
+                                    rows="10" var="item"
+                                    paginator="true" styleClass="textTabla" 
+                                    paginatorPosition="bottom" selectionMode="multiple"
+                                    style="font-size: 10pt; width: 670px">
+
+                        <ace:column id="codigo_carrera" headerText="Codigo" filterMatchMode="contains">
+                            <h:outputText id="codigo_carrera_Cell" value="#{item.codigo}"/>
+                        </ace:column>
+                            
+                        <ace:column id="descripcion_carrera" headerText="Descripcion" filterMatchMode="contains">
+                            <h:outputText id="descripcion_promocion_Cell" value="#{item.descripcion}"/>
+                        </ace:column>                       
+                    </ace:dataTable>
+                </td></tr></table></div>
+        
+                </ace:panel>   
+                
+                <br/>
+                
+             <ace:panel header="Responsables de la promoción">
+                    
+                    <h:panelGrid rendered="#{promocionesController.switchEditar}" columns="3" width="50%" columnClasses="col50,col50,col50">
+                        
+                        <ace:textEntry id="ED-descripcion_responsable" label="Descripción responsable" value="#{promocionesController.descripcionResponsablePromocion}" labelPosition="top"  indicatorPosition="right"  style='width:350px; height:20px; font-size: 10pt'
+                                       validatorMessage="Error: Solo caracteres">
+                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
+                            <f:validateLength maximum="25"/>
+                            <ace:ajax execute="form-detalle:ED-descripcion_responsable" render="form-detalle:descripcion_responsableerr"/>
+                             <ace:message id="descripcion_responsableerr" for="ED-descripcion_responsable" style="color:red; font-size:15px"/>
+                        </ace:textEntry>
+                                    
+                        <ace:textEntry id="ED-correo_responsable" label="Correo electronico" value="#{promocionesController.correoResponsablePromocion}" labelPosition="top"  indicatorPosition="right" style='width:300px; height:20px; font-size: 10pt'
+                                       maxlength="50" validatorMessage="Error: Formato de Correo">
+                            <f:validateRequired/>
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                            <ace:ajax execute="form-detalle:ED-correo_responsable" render="form-detalle:ED-correo_responsableerr"/>
+                            <ace:message id="ED-correo_responsableerr" for="ED-correo_responsable" style="color:red; font-size:15px"/>
+                        </ace:textEntry>
+                        
+                        <ace:pushButton id="ED-agregarResponsable" value="Agregar Responsable" actionListener="#{promocionesController.agregarResponsableEditar}" style='width:170px; height:30px; font-size: 10pt;margin-top: 23px'>
+                            <ace:ajax execute="form-detalle:ED-descripcion_responsable form-detalle:ED-correo_responsable" render="form-detalle:DE-dataTableResponsablesPromocion form-detalle:ED-correo_responsable form-detalle:ED-descripcion_responsable"/>                         
+                        </ace:pushButton>
+                        
+                        
+                    </h:panelGrid>
+                    
+                    <div><table><tr><td> 
+                    
+                    <ace:dataTable id="DE-dataTableResponsablesPromocion" 
+                                   value="#{promocionesController.promocionBean.responsablesPromocion}" 
+                                   rows="10" var="item"
+                                   paginator="true" styleClass="textTabla" 
+                                   paginatorPosition="bottom" selectionMode="multiple"
+                                   style="font-size: 10pt; width: 670px">
+                            <ace:column id="descripcionResponsable" headerText="Responsable" filterMatchMode="contains">
+                                <h:outputText id="codigo_carrera_Cell" value="#{item.descripcion}"/>
+                            </ace:column>                            
+                            <ace:column id="correoResponsable" headerText="Correo Electronico" filterMatchMode="contains">
+                                <h:outputText id="descripcion_promocion_Cell" value="#{item.correo}"/>                           
+                            </ace:column> 
+                        <ace:column id="eliminar_responsable_promocion" headerText="Eliminar" rendered="#{promocionesController.switchEditar}">
+                            <ace:pushButton id="eliminar_button" value="X" type="button" style="font-size: 10px" action="#{promocionesController.agregarListaEliminarResponsable}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{promocionesController.responsablePromocion}"/>
+                                    <ace:ajax execute="@this" render="@all form-ingresa-promocion:dataTableResponsablesPromocion"/>
+                                </ace:pushButton>
+                            </ace:column>         
+                        </ace:dataTable>
+                    </td></tr></table></div>
+                    <ace:message id="message1" for="correo_responsable"/>
+              
+                </ace:panel>           
+       
+            </h:form>
+            
+        </ace:dialog>
+
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->       
+       
+<!-- *********************************************************************************************************************************************** -->
+<!-- Pantalla para ingresar promociones -->
+<!-- *********************************************************************************************************************************************** -->
+
+    <center>
+            <h:form id="form-ingresa-promocion" rendered="#{promocionesController.view == 2}"> 
+               
+                <ace:panel  id="IngresarPromocionPanel-1" style="width: 60%" header="Ingresar Promoción">
+                    
+                    
+                    <ace:comboBox id="comboGruposDeInteres"  itemValue="#{con.codigo}" value="#{promocionesController.promocionPorIngresar.codigoGrupoDeInteres}" 
+                                  listVar="con" listValue="#{promocionesController.listaGruposDeInteres}" label="Seleccione el Grupo de Interés Institucional: " labelPosition="top" width="300" 
+                                  style="font-size: 10pt" filterMatchMode="contains">
+                        <f:facet name="row">
+                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                <h:outputText value="#{con.descripcion}"/>                              
+                            </h:panelGrid>
+                        </f:facet>
+                        <ace:ajax execute="form-ingresa-promocion:comboConvenios" render="form-ingresa-promocion:comboConvenios" />
+                    </ace:comboBox>
+                    
+                    <ace:comboBox id="comboPeriodos"  itemValue="#{per.codigo}" value="#{promocionesController.promocionPorIngresar.codigoPeriodo}" 
+                                  listVar="per" listValue="#{promocionesController.listaPeriodos}" label="Seleccione el Periodo: " labelPosition="top" 
+                                  width="300" style="font-size: 10pt" filterMatchMode="contains">
+                        <f:facet name="row">
+                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                <h:outputText value="#{per.descripcion}"/>                              
+                            </h:panelGrid>
+                        </f:facet>
+                        <ace:ajax execute="form-ingresa-promocion:comboPeriodos" render="form-ingresa-promocion:comboPeriodos" />
+                    </ace:comboBox>
+                    
+                    <ace:comboBox id="comboEscuelas1" value="#{promocionesController.promocionPorIngresar.codigoUnidadAcademica}" itemValue="#{esc.codigo}" 
+                                  listVar="esc" listValue="#{promocionesController.listaEscuelas}" label="Seleccione la unidad academica responsable: " 
+                                  labelPosition="top" width="300" style="font-size: 10pt;padding-right: 10px" filterMatchMode="contains">
+                        <f:facet name="row">
+                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                <h:outputText value="#{esc.descripcion}"/>                              
+                            </h:panelGrid>
+                        </f:facet>
+                        <ace:ajax execute="form-ingresa-promocion:comboEscuelas1" render="form-ingresa-promocion:comboEscuelas1" />
+                    </ace:comboBox>
+                    
+                    <ace:textAreaEntry id="descripcionInput" label="Descripción" value="#{promocionesController.promocionPorIngresar.descripcionPromocion}" labelPosition="top" 
+                                       required="false" indicatorPosition="right" style="width: 60%; height:70px; font-size: 11pt; ">
+                        <ace:ajax execute="form-ingresa-promocion:descripcionInput" render="form-ingresa-promocion:descripcionInput"/>
+                    </ace:textAreaEntry>
+                    
+                    <h:panelGrid id="configurationPanel1" width="50%" columns="4" style="text-align: center; padding-top:15px;">
+                    
+                    <h:outputLabel for="fechaInicioInput" value="Fecha Inicio:"/>
+                    <h:panelGroup layout="block" style="text-align: left; font-size: 11pt">
+                        <ace:dateTimeEntry id="fechaInicioInput" value="#{promocionesController.promocionPorIngresar.fechaInicioPromocion}"
+                                           pattern="MMM/dd/yyyy" 
+                                           navigator="true" locale="es"
+                                           readOnlyInputText="true"
+                                           renderAsPopup="true">                                         
+                            <ace:ajax execute="form-ingresa-promocion:fechaInicioInput form-ingresa-promocion:fechaFinInput" render="form-ingresa-promocion:fechaInicioInput form-ingresa-promocion:fechaFinInput"/>
+                        </ace:dateTimeEntry>
+                    </h:panelGroup>
+    
+                    <h:outputLabel for="fechaFinInput" value="Fecha Fin:"/>
+                    <h:panelGroup layout="block" style="text-align: left; font-size: 11pt">
+                        <ace:dateTimeEntry id="fechaFinInput" value="#{promocionesController.promocionPorIngresar.fechaFinPromocion}"
+                                           pattern="MMM/dd/yyyy" 
+                                           navigator="true" locale="es"
+                                           readOnlyInputText="true"
+                                           renderAsPopup="true">                                    
+                            <ace:ajax execute="form-ingresa-promocion:fechaFinInput form-ingresa-promocion:fechaInicioInput" render="form-ingresa-promocion:fechaFinInput form-ingresa-promocion:fechaInicioInput"/>
+                        </ace:dateTimeEntry>      
+                    </h:panelGroup>                  
+                    </h:panelGrid>
+                    
+                </ace:panel>     
+                    
+                <br/>
+                
+                <ace:panel id="IngresarPromocionPanel_2" header="Selección de Carreras" style="width: 60%">
+                    
+                    <h:panelGrid columns="3" width="50%" columnClasses="col50,col25,col25">
+                        
+                        <ace:comboBox id="comboEscuelas2" value="#{promocionesController.codigoEscuelaSeleccionada}" itemValue="#{esc.codigo}" 
+                                      listVar="esc" listValue="#{promocionesController.listaEscuelas}" label="Seleccione una escuela: " 
+                                      valueChangeListener="#{promocionesController.escuelaChange}" labelPosition="top" width="350" 
+                                      style="font-size: 10pt;padding-right: 10px" filterMatchMode="contains">
+                        <f:facet name="row">
+                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                <h:outputText value="#{esc.descripcion}"/>                              
+                            </h:panelGrid>
+                        </f:facet>
+                        <ace:ajax execute="form-ingresa-promocion:comboEscuelas2 form-ingresa-promocion:comboCarreras" render="form-ingresa-promocion:comboEscuelas2 form-ingresa-promocion:comboCarreras" />
+                    </ace:comboBox>
+                        
+                    <ace:comboBox id="comboCarreras" value="#{promocionesController.codigoCarreraSeleccionada}" itemValue="#{car.codigo}" listVar="car" 
+                                  listValue="#{promocionesController.listaCarreras}" label="Seleccione la carrera: " labelPosition="top" width="310" 
+                                  style="font-size: 10pt;" filterMatchMode="contains">
+                        <f:facet name="row">
+                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                                
+                                <h:outputText value="#{car.descripcion}"/> 
+                            </h:panelGrid>
+                        </f:facet>                  
+                        <ace:ajax execute="form-ingresa-promocion:comboCarreras" render="form-ingresa-promocion:comboCarreras" />
+                    </ace:comboBox>
+   
+                    <ace:pushButton id="agregarCarreraButton" value="Agregar Carrera" actionListener="#{promocionesController.agregarCarrera}" style='width:170px; height:27px; font-size: 10pt;margin-top: 15px'>
+                        <ace:ajax execute="form-ingresa-promocion:comboCarreras" render="form-ingresa-promocion:dataTableCarrerasSeleccionadas form-ingresa-promocion:comboCarreras form-ingresa-promocion:comboEscuelas2" />
+                    </ace:pushButton>
+                        
+                    </h:panelGrid>
+                    
+                    <div><table><tr><td> 
+                                
+                        <ace:dataTable  id="dataTableCarrerasSeleccionadas" 
+                                        value="#{promocionesController.listaCarrerasSeleccionadas}" 
+                                        rows="10" var="item"
+                                        paginator="true" styleClass="textTabla" 
+                                        paginatorPosition="bottom" selectionMode="multiple"
+                                        style="font-size: 10pt; width: 670px">
+
+                            <ace:column id="codigo_carrera" headerText="Codigo" filterMatchMode="contains">
+                                <h:outputText id="codigo_carrera_Cell" value="#{item.codigo}"/>
+                            </ace:column>
+                            
+                            <ace:column id="descripcion_carrera" headerText="Descripcion" filterMatchMode="contains">
+                                <h:outputText id="descripcion_promocion_Cell" value="#{item.descripcion}"/>
+                            </ace:column>
+                            
+                            <ace:column id="eliminar_carrera_seleccionada" headerText="Eliminar">
+                                <ace:pushButton id="eliminar_button" value="X" type="button" style="font-size: 10px" actionListener="#{promocionesController.elminarCarrera}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{promocionesController.carreraSeleccionada}"/>
+                                    <ace:ajax execute="@this" render="@all form-ingresa-promocion:dataTableCarrerasSeleccionadas"/>
+                                </ace:pushButton>
+                            </ace:column>
+           
+                        </ace:dataTable>
+
+                    </td></tr></table></div>
+        
+                </ace:panel>   
+                
+                <br/>
+                
+                <ace:panel id="IngresarPromocionPanel_3" header="Responsables de la promoción" style="width: 60%">
+                    
+                    <h:panelGrid columns="3" width="50%" columnClasses="col50,col50,col50">
+                        
+                        <ace:textEntry id="descripcion_responsable" label="Descripción responsable" value="#{promocionesController.descripcionResponsablePromocion}" labelPosition="top" indicatorPosition="right"  style='width:350px; height:20px; font-size: 10pt' 
+                                       required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
+                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
+                            <f:validateLength maximum="25"/>
+                            <ace:ajax execute="form-ingresa-promocion:descripcion_responsable" render="form-ingresa-promocion:descripcion_responsableerr"/>
+                            <ace:message id="descripcion_responsableerr" for="descripcion_responsable" style="color:red; font-size:15px"/>
+                        </ace:textEntry>
+                        
+                        <ace:textEntry id="correo_responsable" label="Correo electronico" value="#{promocionesController.correoResponsablePromocion}" labelPosition="top" indicatorPosition="right" style='width:300px; height:20px; font-size: 10pt'
+                                       required="true" requiredMessage="Campo Requerido" maxlength="50" validatorMessage="Error: Formato de Correo">
+                            <f:validateRequired/>
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                            <ace:ajax execute="form-ingresa-promocion:correo_responsable" render="form-ingresa-promocion:correo_responsableerr"/>
+                            <ace:message id="correo_responsableerr" for="correo_responsable" style="color:red; font-size:15px"/>
+                        </ace:textEntry>
+                       
+                        
+                        <ace:pushButton id="agregarResponsable" value="Agregar Responsable" actionListener="#{promocionesController.agregarResponsable}" style='width:170px; height:30px; font-size: 10pt;margin-top: 23px'>
+                            <ace:ajax execute="form-ingresa-promocion:descripcion_responsable form-ingresa-promocion:correo_responsable" render="form-ingresa-promocion:dataTableResponsablesPromocion form-ingresa-promocion:correo_responsable form-ingresa-promocion:descripcion_responsable"/>                         
+                        </ace:pushButton>
+                        
+                        
+                    </h:panelGrid>
+                    
+                    <div><table><tr><td> 
+                    
+                    <ace:dataTable id="dataTableResponsablesPromocion" 
+                                   value="#{promocionesController.listaIngresarResponsablesPromocion}" 
+                                   rows="10" var="item"
+                                   paginator="true" styleClass="textTabla" 
+                                   paginatorPosition="bottom" selectionMode="multiple"
+                                   style="font-size: 10pt; width: 670px">
+
+                            <ace:column id="descripcionResponsable" headerText="Responsable" filterMatchMode="contains">
+                                <h:outputText id="codigo_carrera_Cell" value="#{item.descripcion}"/>
+                            </ace:column>
+                            
+                            <ace:column id="correoResponsable" headerText="Correo Electronico" filterMatchMode="contains">
+                                <h:outputText id="descripcion_promocion_Cell" value="#{item.correo}"/>                           
+                            </ace:column>
+                        
+                            <ace:column id="eliminar_responsable_promocion" headerText="Eliminar">
+                                <ace:pushButton id="eliminar_button" value="X" type="button" style="font-size: 10px" actionListener="#{promocionesController.eliminarResponsable}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{promocionesController.responsablePromocion}"/>
+                                    <ace:ajax execute="@this" render="@all form-ingresa-promocion:dataTableResponsablesPromocion"/>
+                                </ace:pushButton>
+                            </ace:column>
+                        
+                        </ace:dataTable>
+
+                    </td></tr></table></div>
+                    <ace:message id="message1" for="correo_responsable"/>
+      
+                </ace:panel>
+                    
+                <br/>
+
+           <center>     
+           <h:panelGrid columns="2">
+            <ace:pushButton type="button" style='background:url("../../images/save.png");width:90px; height:50px;background-repeat: no-repeat;background-position: center'>                               
+                <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('#{guardar.clientId}').show();return false;"/>
+            </ace:pushButton>  
+            <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:90px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                >
+                <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('#{descartar.clientId}').show();return false;"/>
+            </ace:pushButton> 
+            </h:panelGrid>
+                
+            
+            
+            </center>
+            
+            <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Ingresar Promoción">
+                <center>
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    action="#{promocionesController.ingresaPromocion}">
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>
+            
+            <ace:confirmationDialog id="descartarDialog" binding="#{descartar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Descartar cambios?">
+                <center>
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    action="#{promocionesController.clean}">
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>        
+                
+              
+            </h:form>
+        </center> 
+
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+        <div class="footer">
+            <ui:include src="../cr.ac.una.reg.info.templates/footer.xhtml"/>
+        </div>    
+ 
+    </body>
+</html>

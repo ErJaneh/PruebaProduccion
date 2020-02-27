@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:ace="http://www.icefaces.org/icefaces/components"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <head>
+        <title>Registro de admitidos</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/>
+    </head>
+        <ui:include src="MenuPrincipal.xhtml"/>
+    <body>    
+        <br></br>
+        <center>
+            <h:form  id="formRegistroAdmitidos">
+                <ace:panel id="SeleccionPromocion" header="Buscar Promoción" style="width:60%">
+                    <h:panelGrid columns="3" width="50%" columnClasses="col50,col25,col25">
+
+                        <ace:comboBox id="comboGruposDeInteres"  itemValue="#{convenio.codigo}"  listVar="convenio" value="#{registroAdmitidosController.codigoConvenioSelected}" listValue="#{registroAdmitidosController.listaConvenios}" label="Seleccione un grupo de interés: " valueChangeListener="#{registroAdmitidosController.promocionChange}" labelPosition="top" width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{convenio.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax event="valueChange" render="formRegistroAdmitidos:comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:comboBox id="comboPromociones" value="#{registroAdmitidosController.numeroPromocionSelected}" itemValue="#{prom.numeroPromocion}" listVar="prom" listValue="#{registroAdmitidosController.listaPromociones}" label="Seleccione la promoción: " labelPosition="top" width="310" style="font-size: 10pt;">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                                
+                                    <h:outputText value="#{prom.descripcionPromocion}"/> 
+                                </h:panelGrid>
+                            </f:facet>                  
+                            <ace:ajax execute="@this" render="comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:pushButton id="buscarSolicitudesPorPromocion"  actionListener="#{registroAdmitidosController.buscarSolicitudesPorPromocion}" style='background:url("../../images/search.png");width:45px; height:45px;background-repeat: no-repeat;background-position: center' >
+                            <ace:ajax execute="@all" render="@all" />
+                        </ace:pushButton>
+
+                    </h:panelGrid>
+                </ace:panel>
+            </h:form>
+        </center>    
+                    
+        <h:form id="formListado">   
+            <br></br><center>
+                <ace:panel style="width: 60%" header="Listado">      
+                <ace:dataTable id="dataTableSolicitudesAsociadasAPromocion" 
+                               value="#{registroAdmitidosController.listaSolicitudesPorPromocion}" 
+                               var="item" styleClass="textTabla" style="font-size: 10pt" scrollable="true"
+                               scrollHeight="400">
+
+                    <ace:column id="IdentificacionPersona" headerText="Identificación" filterMatchMode="contains" filterBy="#{item.identificacionPersona}">
+                        <h:outputText id="identificacionPersona_Cell" value="#{item.identificacionPersona}"/>
+                    </ace:column>
+
+                    <ace:column id="Nombre" headerText="Nombre completo" filterMatchMode="contains" filterBy="#{item.postulanteAsociado.nombre} #{item.postulanteAsociado.primerApellido} #{item.postulanteAsociado.segundoApellido}">
+                        <h:outputText id="nombre_Cell" value="#{item.postulanteAsociado.nombre} #{item.postulanteAsociado.primerApellido} #{item.postulanteAsociado.segundoApellido}"/>
+                    </ace:column>
+
+                    <ace:column id="Carrera1" headerText="Carrera">
+                        <h:outputText id="carrera1_Cell" value="#{item.codigoPromocion1}"/>
+                    </ace:column>
+                    
+                    <ace:column id="EstadoCarrera1" headerText="Estado Carrera">
+                        <h:outputText id="estadoCarrera1_Cell" value="#{registroAdmitidosController.getDescripcionEstadoSolicitud(item.estadoSolicitud1)}"/>
+                    </ace:column>
+                    
+                    <ace:column id="admision1" headerText="Admitir">   
+                        <ace:pushButton id="check1Estado1" rendered="#{item.estadoSolicitud1==2}" type="button" 
+                                        style='background:url("../../images/checked-checkbox.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        action="#{registroAdmitidosController.cambiarEstadoSolicitud1(item)}">
+                                <ace:ajax render="@all"/>
+                        </ace:pushButton>
+                        <ace:pushButton id="check2Estado1" rendered="#{item.estadoSolicitud1==1 || item.estadoSolicitud1==3 || item.estadoSolicitud1==5}" type="button"
+                                        style='background:url("../../images/unchecked-checkbox.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        action="#{registroAdmitidosController.cambiarEstadoSolicitud1(item)}">
+                                <ace:ajax render="@all"/>
+                        </ace:pushButton>
+                        <ace:pushButton id="check3Estado1" rendered="#{item.estadoSolicitud1==4 || item.estadoSolicitud1==6 || item.estadoSolicitud1==7}"
+                                        style='background:url("../../images/disable.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        disabled="true">
+                        </ace:pushButton>
+                        
+                    </ace:column>
+                    
+                    <ace:column id="Carrera2" headerText="Carrera 2" rendered="#{registroAdmitidosController.dobleCarrera}">
+                        <h:outputText id="carrera2_Cell" value="#{item.codigoPromocion2}"/>
+                    </ace:column>
+                    
+                    <ace:column id="EstadoCarrera2" headerText="Estado Carrera 2" rendered="#{registroAdmitidosController.dobleCarrera}">
+                        <h:outputText id="estadoCarrera2_Cell" value="#{registroAdmitidosController.getDescripcionEstadoSolicitud(item.estadoSolicitud2)}"/>
+                    </ace:column>
+                    
+                    <ace:column id="admision2" headerText="Admitir" rendered="#{registroAdmitidosController.dobleCarrera}">  
+                        <ace:pushButton id="check1Estado2" rendered="#{item.estadoSolicitud2==2}" type="button" 
+                                        style='background:url("../../images/checked-checkbox.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        action="#{registroAdmitidosController.cambiarEstadoSolicitud2(item)}">
+                                <ace:ajax render="@all"/>
+                        </ace:pushButton>
+                        <ace:pushButton id="check2Estado2" rendered="#{item.estadoSolicitud2==1 || item.estadoSolicitud2==3 || item.estadoSolicitud2==5}" type="button"
+                                        style='background:url("../../images/unchecked-checkbox.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        action="#{registroAdmitidosController.cambiarEstadoSolicitud2(item)}">
+                                <ace:ajax render="@all"/>
+                        </ace:pushButton>
+                        <ace:pushButton id="check3Estado2" rendered="#{item.estadoSolicitud2==4 || item.estadoSolicitud2==6 || item.estadoSolicitud2==7}"
+                                        style='background:url("../../images/disable.png");width:25px; height:25px;background-repeat: no-repeat;background-position: center' 
+                                        disabled="true">
+                        </ace:pushButton>
+                    </ace:column>
+               
+                </ace:dataTable>
+            </ace:panel>
+            
+            <h:panelGrid columns="2">
+                <ace:pushButton type="button" style='background:url("../../images/save.png");width:90px; height:50px;background-repeat: no-repeat;background-position: center' disabled="#{registroAdmitidosController.listaSolicitudesPorPromocion==null}">                               
+                <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('#{guardar.clientId}').show();return false;"/>
+            </ace:pushButton>  
+            <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:90px; height:50px;background-repeat: no-repeat;background-position: center' disabled="#{registroAdmitidosController.listaSolicitudesPorPromocion==null}"> 
+                <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('#{descartar.clientId}').show();return false;"/>
+            </ace:pushButton> 
+            </h:panelGrid>
+                
+            
+            
+            </center>
+            
+            <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Seguro que desea guardar cambios?">
+                <center>
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    action="#{registroAdmitidosController.modificarListado()}">
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>
+            
+            <ace:confirmationDialog id="descartarDialog" binding="#{descartar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Descartar cambios?">
+                <center>
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    actionListener="#{registroAdmitidosController.buscarSolicitudesPorPromocion}">
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>
+                    
+        </h:form>         
+        
+        
+        
+        <div class="footer">
+            <ui:include src="../cr.ac.una.reg.info.templates/footer.xhtml"/>
+        </div>
+    </body>
+</html>

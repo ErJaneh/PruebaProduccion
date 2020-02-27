@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+    <h:head>
+        <title>Solicitudes</title>
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <ui:include src="MenuPrincipal.xhtml"/>
+        <br></br>
+        <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->                              
+        <!--********************************************************************************************************************* -->
+        <!--Busqueda de Solicitudes asociadas a una promoción -->
+        <!--********************************************************************************************************************* -->
+        <center>
+            <h:form  id="formMantenimientoSolicitud">
+                <ace:panel id="SeleccionPromocion" header="Buscar Solicitudes Por Promoción" style="width:65%">
+                    <h:panelGrid columns="3" width="50%" columnClasses="col50,col25,col25">
+
+                        <ace:comboBox id="comboGruposDeInteres"  itemValue="#{convenio.codigo}"  listVar="convenio" value="#{mantenimientoSolicitudController.codigoConvenioSelected}" listValue="#{mantenimientoSolicitudController.listaConvenios}" label="Seleccione un grupo de interés: " valueChangeListener="#{mantenimientoSolicitudController.promocionChange}" labelPosition="top" width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{convenio.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax event="valueChange" render="formMantenimientoSolicitud:comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:comboBox id="comboPromociones" value="#{mantenimientoSolicitudController.numeroPromocionSelected}" itemValue="#{prom.numeroPromocion}" listVar="prom" listValue="#{mantenimientoSolicitudController.listaPromociones}" label="Seleccione la promoción: " labelPosition="top" width="310" style="font-size: 10pt;">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                                
+                                    <h:outputText value="#{prom.descripcionPromocion}"/> 
+                                </h:panelGrid>
+                            </f:facet>                  
+                            <ace:ajax execute="@this" render="comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:pushButton id="buscarSolicitudesPorPromocion"  actionListener="#{mantenimientoSolicitudController.buscarSolicitudesPorPromocion}" style='background:url("../../images/search.png");width:45px; height:45px;background-repeat: no-repeat;background-position: center' >
+                            <ace:ajax execute="@all" render="@all" />
+                        </ace:pushButton>
+
+                    </h:panelGrid>
+                </ace:panel>
+            </h:form> 
+        </center> 
+        <br/>
+        
+        <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->                              
+        <!--********************************************************************************************************************* -->
+        <!--Tabla que muestra los datos generales de la solicitud -->
+        <!--********************************************************************************************************************* -->
+        <h:form>
+            <center>
+            <ace:panel style="width:65%">
+                    <ace:dataTable id="dataListaSolicitudes"
+                                   value="#{mantenimientoSolicitudController.listaSolicitudesPorPromocion}"
+                                rows="6"
+                                var="item"
+                                paginator="true" styleClass="textTabla" paginatorPosition="bottom"
+                                style="font-size: 10pt">
+                        <!-- IDENTIFICIÓN DE LA SOLICITUD --> 
+                            <ace:column id="identificacion_Solicitud" headerText="Código Solicitud" sortBy="#{item.identificacionSolicitud}" filterBy="#{item.identificacionSolicitud}" filterMatchMode="contains">
+                                <h:outputText id="idCell" value="#{item.identificacionSolicitud}"/>
+                            </ace:column>
+                        <!-- IDENTIFICIÓN DE LA PERSONA ASOCIADA A LA SOLICITUD -->               
+                            <ace:column id="identificacion_Persona" headerText="ID Persona" sortBy="#{item.identificacionPersona}" filterBy="#{item.identificacionPersona}" filterMatchMode="contains">
+                                <h:outputText id="idPersonaCell" value="#{item.identificacionPersona}"/>
+                            </ace:column>
+                        <!-- NOMBRE POSTULANTE -->
+                            <ace:column id="nombre_Persona" headerText="Nombre completo" filterMatchMode="contains" filterBy="#{item.postulanteAsociado.nombre} #{item.postulanteAsociado.primerApellido} #{item.postulanteAsociado.segundoApellido}">
+                                <h:outputText id="nombre_Cell" value="#{item.postulanteAsociado.nombre} #{item.postulanteAsociado.primerApellido} #{item.postulanteAsociado.segundoApellido}"/>
+                            </ace:column>
+                        <!-- PROMOCION 1 -->   
+                            <ace:column id="codigo_Promocion_1" headerText="Carrera 1" sortBy="#{item.descripcionCarrera1}" filterBy="#{item.descripcionCarrera1}" filterMatchMode="contains">
+                                <h:outputText id="codPromocion1Cel" value="#{item.descripcionCarrera1}"/>
+                            </ace:column>
+                        <!-- ESTADO DE LA SOLICITUD 1 -->                
+                            <ace:column id="estado_Solicitud_1" headerText="Estado Solicitud 1" sortBy="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud1)}" filterBy="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud1)}" filterMatchMode="contains">
+                                <h:outputText id="estadoSol1Cel" value="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud1)}"/>
+                            </ace:column>
+                        <!-- PROMOCION 2 -->                
+                        <ace:column id="codigo_Promocion_2" rendered="#{mantenimientoSolicitudController.dobleCarrera}" headerText="Carrera 2" sortBy="#{item.descripcionCarrera2}" filterBy="#{item.descripcionCarrera2}" filterMatchMode="contains">
+                                <h:outputText id="codPromocion2Cel" value="#{item.descripcionCarrera2}"/>                     
+                            </ace:column>
+                        <!-- ESTADO DE LA SOLICITUD 2 -->                
+                            <ace:column id="estado_Solicitud_2" rendered="#{mantenimientoSolicitudController.dobleCarrera}" headerText="Estado Solicitud 2" sortBy="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud2)}" filterBy="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud2)}" filterMatchMode="contains">
+                                <h:outputText id="estadoSol2Cel" value="#{mantenimientoSolicitudController.getDescripcionEstadoSolicitud(item.estadoSolicitud2)}"/>
+                            </ace:column>
+
+                        <!-- BOTÓN PARA MOSTRAR LOS DETALLES DE LA SOLICITUD --> 
+                            <ace:column id="mostrarDatosSolicitud" headerText="Detalle">                                                                             
+                                <ace:pushButton id="showModal" value="mostrar" type="button" style="font-size: 10px" action="#{mantenimientoSolicitudController.consultaEstadoSolicitud}">
+                                        <f:setPropertyActionListener value="#{item}" target="#{mantenimientoSolicitudController.solicitudBeanSelected}"/>
+                                        <ace:ajax execute="@this" render="@all" onStart="ice.ace.instance('#{dialog.clientId}').show(); return true;" />
+                                </ace:pushButton>                                        
+                            </ace:column>
+                    </ace:dataTable>  
+            </ace:panel>
+            </center>
+        </h:form>
+<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// --> 
+
+
+<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->                              
+<!--********************************************************************************************************************* -->
+<!--Modal para mostrar y editar  los datos de la solicitud-->
+<!--********************************************************************************************************************* -->
+
+        <ace:dialog id="modalSolicitud" binding="#{dialog}" header="Detalle Solicitud" modal="true" showEffect="clip" hideEffect="fade" width="1000" draggable="false" closable="false">
+            <h:form id="form-detalle">
+                
+<!-- ÁREA DE BOTONES-->                  
+                <div style="text-align: right">
+                    <ace:pushButton type="button" style='background:url("../../images/edit.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{mantenimientoSolicitudController.habilitaEdicion}" rendered="#{mantenimientoSolicitudController.mostrar}">
+                        
+                        <ace:ajax execute="@all" render="@all"/>
+                    </ace:pushButton>
+                    
+                    <ace:pushButton type="button" style='background:url("../../images/save.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' rendered="#{mantenimientoSolicitudController.editar}">
+                        <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('#{guardar.clientId}').show();return false;" />
+                    </ace:pushButton> 
+                    
+                    <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{mantenimientoSolicitudController.deshabilitaEdicion}" rendered="#{mantenimientoSolicitudController.mostrar}">
+                        <ace:ajax execute="@all" render="@all" onStart="ice.ace.instance('modalSolicitud').hide(); return true;"/>
+                    </ace:pushButton> 
+                    
+                    <ace:pushButton type="button" style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
+                                    actionListener="#{mantenimientoSolicitudController.deshabilitaEdicion}" rendered="#{mantenimientoSolicitudController.editar}">
+                    </ace:pushButton> 
+                    
+                </div> 
+<!-- DIALOGO DE CONFIRMACION-->  
+             <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Seguro que desea guardar cambios?">
+                <center>                 
+                   
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    actionListener="#{mantenimientoSolicitudController.ActualizarSolicitudListener}" rendered="#{mantenimientoSolicitudController.editar}">
+                        <ace:ajax execute="@all" render="@all" />
+                    </ace:pushButton>
+                    
+                    <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>
+
+             <ace:confirmationDialog id="descartarDialog" binding="#{descartar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    width="330" height="200" position="center" closable="false" header="Confirmación" message="Descartar cambios?">
+                <center>
+                <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();" 
+                                    style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                    actionListener="#{mantenimientoSolicitudController.buscarSolicitudesPorPromocion}">
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                    <ace:pushButton onclick="ice.ace.instance('#{descartar.clientId}').hide();"
+                                    style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                        <ace:ajax execute="@this" render="@all" />
+                    </ace:pushButton>
+                </h:panelGrid>
+                </center>
+             </ace:confirmationDialog>
+
+<!-- DETALLE DE LA PERSONA-->  
+                <ace:panel header="Datos del postulante asociado a la solicitud"> 
+                    
+<!-- PANEL PARA AGRUPAR LA INFORMACIÓN PERSONAL-->    
+                    <h:panelGrid columns="2" width="10%" columnClasses="col20,col21">   
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.identificacionPersona}" disabled="true" label="Identificación:" labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.postulanteAsociado.nombre} #{mantenimientoSolicitudController.solicitudBeanSelected.postulanteAsociado.primerApellido} #{mantenimientoSolicitudController.solicitudBeanSelected.postulanteAsociado.segundoApellido}"  disabled="true" label="Nombre completo:" labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    </h:panelGrid>  
+                    
+<!-- PANEL PARA AGRUPAR LA INFORMACIÓN DE CONTACTO-->
+                    <h:panelGrid columns="6" width="65%" columnClasses="col20,col21,col21">
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.postulanteAsociado.telefono}" disabled="true" label="Teléfono:" labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.postulanteAsociado.correoElectronico}" disabled="true" label="Correo electrónico:" labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>                  
+                    </h:panelGrid>  
+                    
+                </ace:panel>
+<!-- DETALLE DE LA SOLICITUD-->
+                <ace:panel header="Datos de la solicitud" styleClass="#{mantenimientoSolicitudController.colorEditar ? '' : 'required-styling-demo'}">
+
+                    <h:panelGrid columns="2" width="65%" columnClasses="col20,col20">  
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.identificacionSolicitud}" disabled="true" label="Código de solicitud:" labelPosition="top" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    </h:panelGrid>
+
+                    <h:panelGrid>
+                        <h:head>Adecuación:</h:head>
+                        <ace:checkboxButton  id="checkAdecuacion" value="#{mantenimientoSolicitudController.adecuacion}" disabled="#{mantenimientoSolicitudController.mostrar}"/> 
+                    </h:panelGrid>
+<!-- DETALLE DEL ESTADO Y DE LA CARRERA 1 DE LA SOLICITUD-->
+                    <h:panelGrid columns="4" width="60%" columnClasses="col20,col20,col20">
+                        <ace:textEntry value="#{mantenimientoSolicitudController.estadoSolicitud1}" disabled="true" label="Condicion carrera 1:" labelPosition="top" style='width:150px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.descripcionCarrera1}" rendered="#{mantenimientoSolicitudController.mostrar}" disabled="#{mantenimientoSolicitudController.mostrar}"  label="Carrera 1:" required="true" labelPosition="top" indicatorPosition="right" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+
+                        <ace:comboBox rendered="#{mantenimientoSolicitudController.editar}" id="comboPromocion1"  itemValue="#{carrera.codigo}" value="#{mantenimientoSolicitudController.carrera1}" 
+                                      listVar="carrera" listValue="#{mantenimientoSolicitudController.carrerasPorPromocion}" label="Carrera 1: " labelPosition="top" 
+                                      width="300" style="font-size: 10pt" filterMatchMode="contains">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{carrera.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this" />
+                        </ace:comboBox>
+                    </h:panelGrid>
+<!-- DETALLE DEL ESTADO Y DE LA CARRERA 2 DE LA SOLICITUD-->                 
+                    <h:panelGrid columns="4" width="60%" columnClasses="col20,col20,col20" rendered='#{mantenimientoSolicitudController.dobleCarrera}'>
+                        <ace:textEntry value="#{mantenimientoSolicitudController.estadoSolicitud2}" disabled="true" label="Condicion carrera 2:" labelPosition="top" style='width:150px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:textEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.descripcionCarrera2}" rendered="#{mantenimientoSolicitudController.mostrar}" disabled="#{mantenimientoSolicitudController.mostrar}"  label="Carrera 2:" required="true" labelPosition="top" indicatorPosition="right" style='width:295px; height:20px; font-size: 10pt; margin-top: 5px'/>
+                        <ace:comboBox styleClass="edicion"  rendered="#{mantenimientoSolicitudController.editar}" id="comboPromocion2"  itemValue="#{carrera.codigo}" value="#{mantenimientoSolicitudController.carrera2}" 
+                                      listVar="carrera" listValue="#{mantenimientoSolicitudController.carrerasPorPromocion}" label="Carrera 2: " labelPosition="top" 
+                                      width="300" style="font-size: 10pt" filterMatchMode="contains">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{carrera.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this" />
+                        </ace:comboBox>
+                    </h:panelGrid>
+<!-- OBSERVACIONES DE LA SOLICITUD--> 
+                    <h:panelGrid columns="2" width="55%" columnClasses="col20,col20">
+                       <ace:textAreaEntry value="#{mantenimientoSolicitudController.solicitudBeanSelected.observaciones}"  disabled="#{mantenimientoSolicitudController.mostrar}" styleClass="edicion" label="Observaciones:" labelPosition="top" style="width: 100%; height:70px; font-size: 11pt;"/>                          
+                    </h:panelGrid>
+
+                </ace:panel>             
+                <br/> 
+
+            </h:form>
+        </ace:dialog>   
+<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->   
+      <div class="footer">
+            <ui:include src="../cr.ac.una.reg.info.templates/footer.xhtml"/>
+        </div>
+
+    </h:body>
+
+</html>

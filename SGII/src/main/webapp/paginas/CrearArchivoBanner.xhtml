@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:ace="http://www.icefaces.org/icefaces/components"
+       xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <head>
+        <title>Creación de Archivo Banner</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/>
+    </head>
+    <ui:include src="MenuPrincipal.xhtml"/>
+    <body>
+        <br></br>
+        <center>
+            <h:form  id="formRegistroAdmitidos">
+                <ace:panel id="SeleccionPromocion" header="Buscar Promoción" style="width:60%">
+                    <h:panelGrid columns="3" width="50%" columnClasses="col50,col25,col25">
+
+                        <ace:comboBox id="comboGruposDeInteres"  itemValue="#{convenio.codigo}"  listVar="convenio" value="#{creacionArchivoBannerController.codigoConvenioSelected}" listValue="#{creacionArchivoBannerController.listaConvenios}" label="Seleccione un grupo de interés: " valueChangeListener="#{creacionArchivoBannerController.promocionChange}" labelPosition="top" width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{convenio.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax event="valueChange" render="formRegistroAdmitidos:comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:comboBox id="comboPromociones" value="#{creacionArchivoBannerController.numeroPromocionSelected}" itemValue="#{prom.numeroPromocion}" listVar="prom" listValue="#{creacionArchivoBannerController.listaPromociones}" label="Seleccione la promoción: " labelPosition="top" width="310" style="font-size: 10pt;">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                                
+                                    <h:outputText value="#{prom.descripcionPromocion}"/> 
+                                </h:panelGrid>
+                            </f:facet>                  
+                            <ace:ajax execute="@this" render="comboPromociones" />
+                        </ace:comboBox>
+
+                        <ace:pushButton id="buscarPromocion" actionListener="#{creacionArchivoBannerController.actualizaDatosPorMostrar}" style='background:url("../../images/search.png");width:45px; height:45px;background-repeat: no-repeat;background-position: center' >
+                            <ace:ajax execute="@all" render="@all" />
+                        </ace:pushButton>
+                        
+                    </h:panelGrid>
+                </ace:panel>
+            </h:form>
+        </center>
+        
+        <br/>
+        <center>
+        <ace:panel header="Información promoción" style="width: 60%">
+                <h:panelGrid columns="2">
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.codigoPromocion}" disabled="true" label="Promocion:" labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.estadoPromocion}" disabled="true" label="Estado de promocion:" labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                </h:panelGrid>
+                <h:panelGrid columns="5">
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.codigoGrupoDeInteres}" disabled="true" label="Grupo de Interés: " labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.codigoPeriodo}" disabled="true" label="Periodo: " labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.codigoUnidadAcademica}" disabled="true" label="Unidad Academica: " labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.fechaInicioPromocion}" disabled="true" label="Fecha Inicio:" labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>                   
+                    <ace:textEntry value="#{creacionArchivoBannerController.promocionSelected.fechaFinPromocion}" disabled="true" label="Fecha Fin:" labelPosition="top" style='width:90%; height:20px; font-size: 10pt; margin-top: 5px'/>
+                </h:panelGrid>
+                    <ace:textAreaEntry disabled="true" label="Descripción:" value="#{creacionArchivoBannerController.promocionSelected.descripcionPromocion}" labelPosition="top" indicatorPosition="right" style="width: 88%; height:70px; font-size: 11pt;"/>        
+        </ace:panel>
+                      
+        <ace:panel header="Carreras" style="width: 60%">           
+            <center>
+            <h:form>
+            <ace:dataTable  value="#{creacionArchivoBannerController.promocionSelected.carrerasPromocion}" 
+                            rows="10" var="item" paginator="true" styleClass="textTabla" 
+                            paginatorPosition="bottom" style="font-size: 10pt; width: 60%">
+            <ace:column id="codigo_carrera" headerText="Codigo" filterMatchMode="contains">
+                    <h:outputText id="codigo_carrera_Cell" value="#{item.codigo}"/>
+            </ace:column>
+
+            <ace:column id="descripcion_carrera" headerText="Descripcion" filterMatchMode="contains">
+                <h:outputText id="descripcion_promocion_Cell" value="#{item.descripcion}"/>
+            </ace:column>                       
+            </ace:dataTable>
+            </h:form>
+            </center>
+        </ace:panel>
+            
+        <ace:panel header="Datos de admisión" style="width: 60%">
+            <h:panelGrid columns="3">
+                <ace:textEntry label="Admitidos:" value="#{creacionArchivoBannerController.postulantesAdmitidos}" labelPosition="top" style="width: 80%; height:20px; font-size: 10pt;"/>
+                <ace:textEntry label="No Admitidos:" value="#{creacionArchivoBannerController.postulantesNoAdmitidos}" labelPosition="top" style="width: 80%; height:20px; font-size: 10pt;"/>
+                <ace:textEntry label="Total de Postulantes:" value="#{creacionArchivoBannerController.totalPostulantes}" labelPosition="top" style="width: 80%; height:20px; font-size: 10pt;"/>
+            </h:panelGrid>
+        </ace:panel>
+        
+        <br/>
+
+        <ace:pushButton id="crearArchivoButton" disabled="#{creacionArchivoBannerController.promocionSelected == null}" style='background:url("../../images/download-document.png");width:180px; height:50px;background-repeat: no-repeat;background-position: left;font-size: 10pt;padding-left:30%' label="Crear Archivo">                   
+        </ace:pushButton>           
+        </center>    
+     
+    <div class="footer">
+        <ui:include src="../cr.ac.una.reg.info.templates/footer.xhtml"/>
+    </div>   
+        
+    </body>
+</html>

@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @author Sheng Yuan Lin
+    @version 1.0
+    @since 1.0
+-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:icecore="http://www.icefaces.org/icefaces/core"
+       xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+
+    <head>
+        <title>Universidad Nacional</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/>
+    </head>
+    <body onload="#{solicitudFuncionarioController}">
+        <ui:include src="MenuPrincipal.xhtml"/>
+
+
+
+        <h:form id="formSolicitudFuncionario" >  
+            <center><div><table><tr><td>
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- Busqueda/ recuperación del detalle de Personas ya existentes -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="panelBuscar" header="Busqueda de postulante existente" >
+                                    <h:panelGrid id="buscarIdent" columns="4">
+                                        <h:outputLabel for="buscarIdentificacion"  value="Buscar por Identificacion:"/>
+                                        <h:inputText id="buscarIdentificacion"  value="#{solicitudFuncionarioController.personaBuscar.identificacion}" validatorMessage="Error: Debe ser digitos [0-9] y largo [8-13]">
+                                            <f:validateRegex pattern="[0-9]{8,12}" />                                 
+                                            <ace:ajax execute="buscarIdentificacion" render="outInfoPersona buscarIdentificacionerr mensajeerr " />
+                                        </h:inputText>
+                                        <ace:pushButton id="buscarIdenti" value="Buscar" type="button" style="font-size: 10px" action="#{solicitudFuncionarioController.buscar()}" >
+                                            <ace:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:message id="buscarIdentificacionerr" for="buscarIdentificacion" style="color:red; font-size:15px" />
+
+                                        <h:outputLabel id="mensajeerr" rendered="#{solicitudFuncionarioController.personaNoEncontrada()}"  value="No se encontro persona, llene el formulario!!" style="color:red; font-size:15px" />
+                                    </h:panelGrid>
+                                </ace:panel>   
+
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- Detalle de Persona encontrada -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <h:panelGroup id="outInfoPersona" rendered="#{solicitudFuncionarioController.personaEncontrada()}">
+                                    <ace:panel header="Información del Postulante Buscado" >
+
+                                        <h:panelGrid  columns="2" width="50%" columnClasses="col100,col100,col100,col100">
+
+                                            <h:outputText value="Identificacion: " ></h:outputText>
+                                            <ace:textEntry id="identificacion2" value="#{solicitudFuncionarioController.personaBeanSelected.identificacion}" disabled="true"  required="left" indicatorPosition="right" style=' width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:identificacion2" render="form:identificacion2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Nombre: " ></h:outputText>
+                                            <ace:textEntry id="nombre2" value="#{solicitudFuncionarioController.personaBeanSelected.nombre}" disabled="true" styleClass="edicion" required="true" indicatorPosition="right"  style=' width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:nombre2" render="form:nombre2"/>
+                                            </ace:textEntry>
+
+
+                                            <h:outputText value="Primer Apellido: " ></h:outputText>
+                                            <ace:textEntry id="PrimerApellido2"  value="#{solicitudFuncionarioController.personaBeanSelected.primerApellido}"  disabled="true" styleClass="edicion" required="true" indicatorPosition="right"  style='  width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:PrimerApellido2" render="form:PrimerApellido2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Segundo Apellido " ></h:outputText>
+                                            <ace:textEntry id="SegundoApellido2"  value="#{solicitudFuncionarioController.personaBeanSelected.segundoApellido}"  disabled="true" styleClass="edicion" required="true" indicatorPosition="right"  style='  width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:SegundoApellido2" render="form:SegundoApellido2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Fecha Nacimiento: " ></h:outputText>
+                                            <ace:textEntry id="fechaNacimiento2"  value="#{solicitudFuncionarioController.personaBeanSelected.fecha}"  disabled="true" indicatorPosition="right"  style='width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:fechaNacimiento2" render="form:fechaNacimiento2"/>
+                                            </ace:textEntry>                     
+
+                                            <h:outputText id="telefonoEditar" value="Telefono: " ></h:outputText>
+                                            <ace:textEntry id="telefono2"  value="#{solicitudFuncionarioController.personaBeanSelected.telefono}"  disabled="true" styleClass="edicion" required="true" indicatorPosition="right"  style='  width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:telefono2" render="form:telefono2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText id="correoEditar" value="Correo: " ></h:outputText>
+                                            <ace:textEntry id="correo2"  value="#{solicitudFuncionarioController.personaBeanSelected.correoElectronico}"  disabled="true"  styleClass="edicion" required="true" indicatorPosition="right"  style='  width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:correo2" render="form:correo2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Colegio: " ></h:outputText>
+                                            <ace:textEntry id="colegio2"  value="#{solicitudFuncionarioController.colegio.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:colegio2" render="form:colegio2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Graduado en: " ></h:outputText>
+                                            <ace:textEntry id="graduacionColegio2"  value="#{solicitudFuncionarioController.personaBeanSelected.anioGraduacionColegio}"  disabled="true" required="true" indicatorPosition="right"  style='width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:graduacionColegio2" render="form:graduacionColegio2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Nota Colegio: " ></h:outputText>
+                                            <ace:textEntry id="notaColegio2"  value="#{solicitudFuncionarioController.personaBeanSelected.notaColegio}"  disabled="true"  required="true" indicatorPosition="right"  style='width:250px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:notaColegio2" render="form:notaColegio2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Territorio: " ></h:outputText>
+                                            <ace:textEntry id="territorio2"  value="#{solicitudFuncionarioController.territorioIndigena.descripcion}"  disabled="true" required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:territorio2" render="form:territorio2"/>
+                                            </ace:textEntry>
+
+                                            <h:outputText value="Grupo Indigena: " ></h:outputText>
+                                            <ace:textEntry id="grupo2"  value="#{solicitudFuncionarioController.grupoIndigena.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                                                <ace:ajax execute="form:grupo2" render="form:grupo2"/>
+                                            </ace:textEntry>
+
+                                        </h:panelGrid>
+
+                                    </ace:panel>
+                                </h:panelGroup>                    
+
+
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- Formulario para ingresar datos de una persona nueva -->
+                                <!-- *********************************************************************************************************************************************** -->                    
+                                <ace:panel id="panel1" header="Información del Postulante" rendered="#{solicitudFuncionarioController.personaNoEncontrada()}" >
+                                    <h:panelGrid id="principal" columns="3">
+
+                                        <h:outputLabel for="indigena" value="Indígena:"/>
+                                        <ace:checkboxButton id="checkBox1" value="#{solicitudFuncionarioController.esIndigena}" valueChangeListener="#{solicitudFuncionarioController.indigenaChange}">
+                                            <ace:ajax event="activate" render="outInfoindigena" />
+                                        </ace:checkboxButton>
+                                        <ace:message for="indigena" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="identificacion" value="Identificacion:"/>
+                                        <h:inputText id="identificacion"  value="#{solicitudFuncionarioController.personaBean.identificacion}" required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Debe ser digitos [0-9] y largo [8-13]">
+                                            <f:validateRegex pattern="[0-9]{8,12}" />                                 
+                                            <ace:ajax execute="identificacion" render="identificacionerr" />
+                                        </h:inputText>
+                                        <ace:message id="identificacionerr" for="identificacion" style="color:red; font-size:15px" />
+
+
+                                        <h:outputLabel for="nombre" value="Nombre:"/>
+                                        <h:inputText id="nombre" value="#{solicitudFuncionarioController.personaBean.nombre}"  required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres"> 
+                                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
+                                            <f:validateLength maximum="25"/>
+                                            <ace:ajax execute="nombre" render="nombreerr"/>
+                                        </h:inputText>
+                                        <ace:message id="nombreerr" for="nombre" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="primerApellido" value="Primer Apellido:"/>
+                                        <h:inputText id="primerApellido" value="#{solicitudFuncionarioController.personaBean.primerApellido}" required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
+                                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
+                                            <f:validateLength maximum="25"/>
+                                            <ace:ajax execute="primerApellido" render="primerApellidoerr"/>
+                                        </h:inputText>
+                                        <ace:message id="primerApellidoerr" for="primerApellido" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="segundoApellido" value="Segundo Apellido:"/>
+                                        <h:inputText id="segundoApellido" value="#{solicitudFuncionarioController.personaBean.segundoApellido}" required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
+                                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
+                                            <f:validateLength maximum="25"/>
+                                            <ace:ajax execute="segundoApellido" render="segundoApellidoerr"/>
+                                        </h:inputText>
+                                        <ace:message id="segundoApellidoerr" for="segundoApellido" style="color:red; font-size:15px"/>
+
+
+                                        <h:outputLabel for="fechaNacimiento" value="Fecha Nacimiento:"/>
+                                        <ace:dateTimeEntry id="cal"
+                                                           value="#{solicitudFuncionarioController.personaBean.fecha}"
+                                                           navigator="true" locale="es"
+                                                           pattern="dd/MMM/yyyy"
+                                                           renderAsPopup="true"
+                                                           required="true"
+                                                           yearRange="c-70"
+                                                           requiredMessage="Debe seleccionar una fecha">     
+                                            <ace:ajax event="dateSelect" render="formSolicitudFuncionario:cal" />
+                                        </ace:dateTimeEntry>
+                                        <ace:message id="fechaNacimientoerr" for="fechaNacimiento" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="telefono" value="Telefono:"/>
+                                        <h:inputText id="telefono" value="#{solicitudFuncionarioController.personaBean.telefono}" required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo Numeros" maxlength="50">
+                                            <f:convertNumber integerOnly="true" type="number" pattern="#00000000" />
+                                            <ace:ajax execute="telefono" render="telefonoerr"/>
+                                        </h:inputText>
+                                        <ace:message id="telefonoerr" for="telefono" style="color:red; font-size:15px"/>
+
+
+
+                                        <h:outputLabel for="correo" value="Correo:"/>
+                                        <h:inputText id="correo" value="#{solicitudFuncionarioController.personaBean.correoElectronico}" required="true" requiredMessage="Campo Requerido" maxlength="50" validatorMessage="Error: Formato de Correo">
+                                            <f:validateRequired/>
+                                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                                            <ace:ajax execute="correo" render="correoerr"/>
+                                        </h:inputText>
+                                        <ace:message id="correoerr" for="correo" style="color:red; font-size:15px"/>
+
+
+                                        <h:panelGroup id="outInfoindigena">
+                                            <h:panelGrid id="infoindigena" columns="1" width="100%" rendered="#{solicitudFuncionarioController.esIndigena}">
+                                                <ace:comboBox id="territorioIndigena" value="#{solicitudFuncionarioController.personaBean.codigoTerritorio}" itemValue="#{terrin.codigo}" listVar="terrin" listValue="#{solicitudFuncionarioController.listaTerritorioIndigena}" label="Territorio Indígena: " labelPosition="top" height="100" width="300" style="font-size: 10pt;padding-right: 10px">
+                                                    <f:facet name="row">
+                                                        <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                          
+                                                            <h:outputText value="#{terrin.descripcion}"/>                            
+                                                        </h:panelGrid>
+                                                    </f:facet>
+                                                    <ace:ajax execute="@this" render="infoindigena" />
+                                                </ace:comboBox>  
+
+
+                                                <ace:comboBox id="grupoIndigena" value="#{solicitudFuncionarioController.personaBean.codigoGrupoIndigena}" itemValue="#{grupIndig.codigo}" listVar="grupIndig" listValue="#{solicitudFuncionarioController.listaGrupoIndigena}" label="Grupo Indígena: "  labelPosition="top" height="100" width="300" style="font-size: 10pt;padding-right: 10px">
+                                                    <f:facet name="row">
+                                                        <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                          
+                                                            <h:outputText value="#{grupIndig.descripcion}"/>                            
+                                                        </h:panelGrid>
+                                                    </f:facet>
+                                                    <ace:ajax execute="@this" render="infoindigena" />    
+
+                                                </ace:comboBox> 
+                                            </h:panelGrid>
+                                        </h:panelGroup>
+
+                                    </h:panelGrid>
+
+                                </ace:panel>     
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- INFORMACION Sobre Género/Nacionalidad/Estado Civil -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="PanelInfoGeneNacEstad" header="Género / Nacionalidad / Estado Civil" >   
+                                    <h:panelGrid columns="3" width="50%" >
+
+                                        <h:outputLabel for="genero" value="Género:"/>
+                                        <ace:comboBox id="genero" value="#{solicitudFuncionarioController.solicitudBean.genero}" width="230" required="true" requiredMessage="Campo Requerido">
+                                            <f:selectItem noSelectionOption="true" itemValue="" />
+                                            <f:selectItem itemValue="Masculino"/>
+                                            <f:selectItem itemValue="Femenino"/>
+                                            <ace:ajax event="valueChange" render="formSolicitudFuncionario:genero formSolicitudFuncionario:generoerr" />
+                                        </ace:comboBox>
+                                        <ace:message id="generoerr" for="genero" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="nacionalidad" value="Nacionalidad: "/>
+                                        <ace:comboBox id="nacionalidad" value="#{solicitudFuncionarioController.solicitudBean.codigoNacionalidad}" itemValue="#{nacionalidad.codigo}" listVar="nacionalidad" listValue="#{solicitudFuncionarioController.listaNacionalidad}" height="100" width="230" style="font-size: 10pt;padding-right: 10px" required="true">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="1" width="100%" columnClasses="col50,col25,col25">                          
+                                                    <h:outputText value="#{nacionalidad.descripcion}"/>                            
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax execute="@this" render="nacionalidad" />
+                                        </ace:comboBox>  
+                                        <ace:message id="nacionalidaderr" for="nacionalidad" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="estadoCivil" value="Estado Civil: "/>
+                                        <ace:comboBox id="estadoCivil" value="#{solicitudFuncionarioController.solicitudBean.codigoEstadoCivil}" itemValue="#{estadoCivil.codigo}" listVar="estadoCivil" listValue="#{solicitudFuncionarioController.listaEstadoCivil}" height="100" width="230" style="font-size: 10pt;padding-right: 10px" required="true">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="1" width="100%" columnClasses="col50,col25,col25">                          
+                                                    <h:outputText value="#{estadoCivil.descripcion}"/>                            
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax execute="@this" render="estadoCivil" />
+                                        </ace:comboBox>  
+                                        <ace:message id="estadoCivilerr" for="estadoCivil" style="color:red; font-size:15px"/>     
+
+                                    </h:panelGrid>      
+                                </ace:panel>
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- INFORMACION Sobre Dirección Provincia/Cantón/Distrito/Dirección Exacta -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="Panel2" header="Dirección" >    
+                                    <h:panelGrid columns="3" width="40%" columnClasses="col25,col25,col25">
+
+                                        <ace:comboBox id="comboProvincia" itemValue="#{prov.codigo}" listVar="prov" listValue="#{solicitudFuncionarioController.listaProvincias}" label="Seleccione una Provincia: " valueChangeListener="#{solicitudFuncionarioController.provinciaChange}" labelPosition="top" width="300" style="font-size: 10pt;padding-right: 10px">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                                    <h:outputText value="#{prov.descripcion}"/>                              
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax event="valueChange" render="formSolicitudFuncionario:comboCanton" />
+                                        </ace:comboBox>
+
+
+                                        <ace:comboBox id="comboCanton"  itemValue="#{cant.descripcion}" listVar="cant" listValue="#{solicitudFuncionarioController.listaCantones}" label="Seleccione el Cantón: " filterMatchMode="contains" valueChangeListener="#{solicitudFuncionarioController.cantonChange}" labelPosition="top" width="300" style="font-size: 10pt;">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                          
+                                                    <h:outputText value="#{cant.descripcion}"/>                            
+                                                </h:panelGrid>                            
+                                            </f:facet>
+                                            <ace:ajax event="valueChange"  render="formSolicitudFuncionario:comboDistrito" />
+                                        </ace:comboBox>
+
+
+                                        <ace:comboBox id="comboDistrito" itemValue="#{dist.codigo}" value="#{solicitudFuncionarioController.solicitudBean.codigoUbicacion}" listVar="dist" listValue="#{solicitudFuncionarioController.listaDistritos}" filterMatchMode="contains" label="Seleccione el Distrito: " labelPosition="top" width="300" style="font-size: 10pt;" required="true">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                          
+                                                    <h:outputText  value="#{dist.descripcion}"/>                            
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax execute="@this" render="comboDistrito" />
+                                        </ace:comboBox>
+                                    </h:panelGrid>              
+
+                                    <h:panelGrid columns="2" width="40%">
+                                        <ace:textAreaEntry id="direccionInput"  value="#{solicitudFuncionarioController.solicitudBean.direccionExacta}" label="Dirección Exacta: " labelPosition="top" required="true" requiredMessage="Campo Requerido" indicatorPosition="right" style="width: 200%; height:20px; font-size: 11pt; ">
+                                            <ace:ajax render="@this comment1Msg"/>
+                                        </ace:textAreaEntry>
+                                    </h:panelGrid>
+                                </ace:panel>
+
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- INFORMACION Sobre Adecuación -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="PanelAdecuacion" header="Adecuación" >
+                                    <h:panelGrid columns="3" width="40%" columnClasses="col25,col25,col25">
+                                        <h:outputLabel for="adecuacion" value="Adecuación: "/>
+                                        <ace:checkboxButton id="adecuacion" value="#{solicitudFuncionarioController.adecuacion}" valueChangeListener="#{solicitudFuncionarioController.adecuacionChange}">
+                                            <ace:ajax event="activate" render="adecuacion" />
+                                        </ace:checkboxButton>
+                                        <ace:message id="adecuacionerr" for="adecuacion" style="color:red; font-size:15px"/>
+                                    </h:panelGrid>
+                                </ace:panel>
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- INFORMACION Colegio/notas/año de finalización -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="Panel3" header="Información de Colegio" rendered="#{solicitudFuncionarioController.personaNoEncontrada()}">
+                                    <h:panelGrid columns="3" columnClasses="col50,col25,col25">
+
+                                        <h:outputLabel for="nombreColegio" value="Nombre Colegio: "/>
+                                        <ace:comboBox id="nombreColegio" value="#{solicitudFuncionarioController.personaBean.codigoColegio}" itemValue="#{nombreColegio.codigo}" filterMatchMode="contains" listVar="nombreColegio" listValue="#{solicitudFuncionarioController.listaColegios}" height="100" width="400" style="font-size: 10pt;padding-right: 10px" required="true" requiredMessage="Debe seleccionar uno">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="1" width="100%" columnClasses="col50,col25,col25">                          
+                                                    <h:outputText value="#{nombreColegio.descripcion}"/>                            
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax event="valueChange" render="formSolicitudFuncionario:nombreColegio formSolicitudFuncionario:nombreColegioerr" />
+                                        </ace:comboBox>  
+                                        <ace:message id="nombreColegioerr" for="nombreColegio" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="anioColegio" value="Año Finalización Colegio:"/>
+                                        <h:inputText id="anioColegio" value="#{solicitudFuncionarioController.personaBean.anioGraduacionColegio}" required="true" requiredMessage="Campo Requerido" maxlength="4" validatorMessage="Error: Solo Numeros">
+                                            <f:convertNumber integerOnly="true" type="number" pattern="#0000" />
+                                            <ace:ajax execute="anioColegio" render="anioColegioerr"/>
+                                        </h:inputText>
+                                        <ace:message id='anioColegioerr' for="anioColegio" style="color:red; font-size:15px"/>
+
+                                        <h:outputLabel for="notaColegio" value="Nota de Colegio:"/>
+                                        <h:inputText id="notaColegio" value="#{solicitudFuncionarioController.personaBean.notaColegio}" required="true" requiredMessage="Campo Requerido" maxlength="5" validatorMessage="Error: Solo Numeros">
+                                            <f:convertNumber integerOnly="true" type="number" pattern="#000.00" />
+                                            <ace:ajax execute="notaColegio" render="notaColegioerr"/>
+                                        </h:inputText>
+                                        <ace:message id='notaColegioerr' for="notaColegio" style="color:red; font-size:15px"/>
+                                    </h:panelGrid>  
+                                </ace:panel> 
+
+                                <!-- *********************************************************************************************************************************************** -->
+                                <!-- INFORMACION Sobre Promoción/Observaciones -->
+                                <!-- *********************************************************************************************************************************************** -->
+                                <ace:panel id="panel4" header="Selección de la promoción">
+                                    <h:panelGrid id="selectPromocion" columns="3">    
+                                        <h:outputLabel for="promocion" value="Promocion : "/>
+                                        <ace:comboBox id="promocion" value="#{solicitudFuncionarioController.promocion}" itemValue="#{promo.numeroPromocion}" listVar="promo" required="true" requiredMessage="Debe escoger una promocion" listValue="#{solicitudFuncionarioController.listaPromociones}" valueChangeListener="#{solicitudFuncionarioController.promocionChange}" width="300" style="font-size: 10pt;padding-right: 10px">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                                    <h:outputText value="#{promo.codigoPromocion}"/>                              
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax event="valueChange" render="@all formSolicitudFuncionario:carrera2 formSolicitudFuncionario:carrera1" />
+                                        </ace:comboBox>
+                                        <ace:message id="promocionerr" for="promocion" style="color:red; font-size:15px"/>
+                                        
+                                     
+                                        
+                                        <h:outputLabel for="carrera1" value="Carrera 1 : "/>
+                                        <ace:comboBox id="carrera1" value="#{solicitudFuncionarioController.solicitudBean.codigoPromocion1}" itemValue="#{promo.codigo}" listVar="promo" required="true" requiredMessage="Debe escoger una carrera" listValue="#{solicitudFuncionarioController.carrerasPorPromocion}"  width="300" style="font-size: 10pt;padding-right: 10px">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                                    <h:outputText value="#{promo.codigo}"/>                              
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax event="valueChange" render="carrera2" />
+                                        </ace:comboBox>
+                                        <ace:message id="carrera1err" for="carrera1" style="color:red; font-size:15px"/>
+                                        
+                                        
+                                        <h:outputLabel rendered="#{solicitudFuncionarioController.testCarrera2}" for="carrera2" value="Carrera 2 : "/>
+                                        <ace:comboBox rendered="#{solicitudFuncionarioController.testCarrera2}" id="carrera2" value="#{solicitudFuncionarioController.solicitudBean.codigoPromocion2}" itemValue="#{promo.codigo}" listVar="promo" required="true" requiredMessage="Debe escoger una carrera" listValue="#{solicitudFuncionarioController.carrerasPorPromocion}"  width="300" style="font-size: 10pt;padding-right: 10px">
+                                            <f:facet name="row">
+                                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                                    <h:outputText value="#{promo.codigo}"/>                              
+                                                </h:panelGrid>
+                                            </f:facet>
+                                            <ace:ajax event="valueChange" render="carrera2" />
+                                        </ace:comboBox>
+                                        <ace:message rendered="#{solicitudFuncionarioController.testCarrera2}" id="carrera2err" for="carrera2" style="color:red; font-size:15px"/>
+                                        
+                                        
+                                        
+                                        
+                                     
+                                        
+                                        <h:outputLabel for="observaciones" value="Observaciones : "/>
+                                        <ace:textAreaEntry id="observaciones"  value="#{solicitudFuncionarioController.solicitudBean.observaciones}"  indicatorPosition="right" style="width: 200%; height:100px; font-size: 11pt; ">
+                                            <ace:ajax render="observaciones"/>
+                                        </ace:textAreaEntry>
+                                        <ace:message id="observacioneserr" for="observaciones" style="color:red; font-size:15px"/>
+                                    </h:panelGrid>
+
+                                    <!-- *********************************************************************************************************************************************** -->
+                                    <!-- Validar Campos e Ingresar Solicitud -->
+                                    <!-- *********************************************************************************************************************************************** -->                                    
+
+                                    <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                                            width="330" height="200" position="center" closable="false" header="Confirmación" message="Seguro que desea guardar cambios?">
+                                        <center>                 
+
+                                            <h:panelGrid columns="2" styleClass="centeredPanelGrid" >
+                                                <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();" 
+                                                                style='background:url("../../images/confirmation.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'
+                                                                action="#{solicitudFuncionarioController.ingresarSolicitud()}">
+                                                    <ace:ajax execute="@all" render="@all" />
+                                                </ace:pushButton>
+
+                                                <ace:pushButton onclick="ice.ace.instance('#{guardar.clientId}').hide();"
+                                                                style='background:url("../../images/cancel.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center'>
+                                                    <ace:ajax execute="@this" render="@all" />
+                                                </ace:pushButton>
+                                            </h:panelGrid>
+                                        </center>
+                                    </ace:confirmationDialog>
+
+                                    <ace:panel id="ingresarSolicitudButton" style="width: 100%; height: 60px; border: none">
+                                        <center>                                                                                                               
+                                            <ace:pushButton id="ingresarSolicitud" value="Ingresar Solicitud" action="#{solicitudFuncionarioController.ingresarSolicitud()}" style='width:190px; height:30px; font-size: 10pt; font-weight: bold'>
+
+                                                <ace:ajax execute="@all" render="@all formSolicitudFuncionario:outInfoPersona" onStart="ice.ace.instance('#{guardar.clientId}').show();return false;" />
+                                            </ace:pushButton>
+                                            <h:panelGroup rendered="#{solicitudFuncionarioController.ingresado}">
+                                               
+                                            </h:panelGroup>
+                                            <script>#{solicitudFuncionarioController.setIngresado(false)};</script>
+                                        </center>     
+                                    </ace:panel>
+
+                                </ace:panel>
+
+
+                            </td></tr></table></div></center>
+        </h:form>
+
+        <div class="footer">
+            <ui:include src="../cr.ac.una.reg.info.templates/footer.xhtml"/>
+        </div>        
+    </body>
+</html>

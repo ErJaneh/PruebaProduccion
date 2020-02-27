@@ -1,0 +1,59 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:icecore="http://www.icefaces.org/icefaces/core"
+       xmlns:ace="http://www.icefaces.org/icefaces/components">
+    <h:head>
+        <title>Menu Principal</title>
+        <link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="styleSheet" type="text/css"/> 
+        
+
+    </h:head>
+    <h:body>
+        <div class="header">
+            <div class="alinear">
+                <ui:include src="../cr.ac.una.reg.info.templates/header.xhtml"/>
+
+            </div>
+        </div>   
+        <h:form id="menuForm">
+            <div align="center"> 
+                <ace:menuBar id="menu" style="background-color: transparent;width: 50%" autoSubmenuDisplay="true">
+                                      
+                    <ace:menuItem id="home" value="Inicio" url="/faces/paginas/MenuPrincipal.xhtml" icon="ui-icon ui-icon-home"/>
+                    
+                    <ace:submenu id="solicitudes" label="Solicitudes" icon="ui-icon ui-icon-folder-open">
+                        <ace:menuItem id="SolicitudFuncionario" value="Crear Solicitud" url="/faces/paginas/SolicitudFuncionario.xhtml" icon="ui-icon ui-icon-disk"/>
+                        <ace:menuItem id="MantenimientoSolicitud" value="Consulta Solicitudes" url="/faces/paginas/MantenimientoSolicitud.xhtml" icon="ui-icon  ui-icon-circle-zoomout"/>                       
+                    </ace:submenu>
+                   
+                    
+                    <ace:submenu id="promociones" label="Promociones" icon="ui-icon  ui-icon-folder-open">
+                        <ace:menuItem id="informacionPromocion" value="Consulta Promociones" action="#{promocionesController.redirect('Promociones.xhtml')}" 
+                                      actionListener="#{promocionesController.cambiarView}" icon="ui-icon  ui-icon-circle-zoomout"/>                   
+                        <ace:menuItem id="ingresarPromocion" value="Ingresar Promociones" action="#{promocionesController.redirect('Promociones.xhtml')}" 
+                                      actionListener="#{promocionesController.cambiarView}" icon="ui-icon ui-icon-disk"/>
+                    </ace:submenu>
+                     
+                    <ace:submenu id="admitidos" label="Admisión" icon="ui-icon ui-icon-folder-open">
+                        <ace:menuItem id="SeleccionAdmitidos" value="Registrar Admitidos" url="/faces/paginas/RegistroAdmitidos.xhtml"  icon="ui-icon  ui-icon-circle-check"/>
+                     </ace:submenu>
+                    
+                    <ace:submenu id="postulante" label="Postulantes" icon="ui-icon ui-icon-folder-open">
+                        <ace:menuItem id="ConsultaPostulantes" value="Consulta Postulantes" url="/faces/paginas/ConsultaPostulantes.xhtml" icon="ui-icon  ui-icon-circle-zoomout"/>
+                    </ace:submenu>
+                    
+                    <ace:submenu label="Administrador" icon="ui-icon ui-icon-folder-open">
+                        <ace:menuItem value="Crear archivo para Banner" url="/faces/paginas/CrearArchivoBanner.xhtml" icon="ui-icon ui-icon-clipboard"/>
+                    </ace:submenu>
+                    
+                </ace:menuBar>
+            </div>
+        </h:form>
+        
+        
+
+
+    </h:body>
+</html>  

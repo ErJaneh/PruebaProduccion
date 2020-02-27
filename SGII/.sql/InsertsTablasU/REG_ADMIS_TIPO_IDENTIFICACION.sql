@@ -1,0 +1,13 @@
+REM INSERTING into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION
+SET DEFINE OFF;
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('0','Sin asignar');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('1','Cédula');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('2','Pasaporte');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('3','Cédula de residencia');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('4','Carnet de Refugiado');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('5','Cédula de residencia Permanente');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('6','Cédula de residencia Temporal');
+Insert into REGISTRO.REG_ADMIS_TIPO_IDENTIFICACION (CODIGO,DESCRIPCION) values ('7','Dimex');
+
+--****************************************************************
+EXIT
