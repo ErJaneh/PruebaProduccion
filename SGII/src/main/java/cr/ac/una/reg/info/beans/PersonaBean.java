@@ -14,31 +14,24 @@ public class PersonaBean implements Serializable {
     private Date fecha;
     private String codigoColegio;
     private Integer anioGraduacionColegio;
-    private Integer notaColegio;
+    private float notaColegio;
     private char indigena;
     private String codigoTerritorio;
     private String codigoGrupoIndigena;
     private Integer telefono;
+    private Integer telefono2;
     private String correoElectronico;
     private boolean selected;
     private String estadoEnSistema;
 
-//    public PersonaBean(String identificacion, String codigoTipoIdentificacion, String nombre, String primerApellido, String segundoApellido, String conocidoComo, Date fecha, String codigoColegio, Integer anioGraduacionColegio, Integer notaColegio, char indigena, String codigoTerritorio, String codigoGrupoIndigena) {
-//        this.identificacion = identificacion;
-//        this.codigoTipoIdentificacion = codigoTipoIdentificacion;
-//        this.nombre = nombre;
-//        this.primerApellido = primerApellido;
-//        this.segundoApellido = segundoApellido;
-//        this.conocidoComo = conocidoComo;
-//        this.fecha = fecha;
-//        this.codigoColegio = codigoColegio;
-//        this.anioGraduacionColegio = anioGraduacionColegio;
-//        this.notaColegio = notaColegio;
-//        this.indigena = indigena;
-//        this.codigoTerritorio = codigoTerritorio;
-//        this.codigoGrupoIndigena = codigoGrupoIndigena;
-//    }
+    public Integer getTelefono2() {
+        return telefono2;
+    }
 
+    public void setTelefono2(Integer telefono2) {
+        this.telefono2 = telefono2;
+    }
+    
     public String getEstadoEnSistema() {
         return estadoEnSistema;
     }
@@ -128,11 +121,11 @@ public class PersonaBean implements Serializable {
         this.anioGraduacionColegio = anioGraduacionColegio;
     }
 
-    public Integer getNotaColegio() {
+    public float getNotaColegio() {
         return notaColegio;
     }
 
-    public void setNotaColegio(Integer notaColegio) {
+    public void setNotaColegio(float notaColegio) {
         this.notaColegio = notaColegio;
     }
 

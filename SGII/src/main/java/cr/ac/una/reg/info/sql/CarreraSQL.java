@@ -11,14 +11,13 @@ package cr.ac.una.reg.info.sql;
  */
 public class CarreraSQL {
     
-    public synchronized static String listarCarrerasPorEscuela(String escuela) {
-        String sql = "SELECT SMRPRLE_PROGRAM AS CODIGO,SMRPRLE_PROGRAM_DESC FROM REGISTRO.SMRPRLE WHERE SMRPRLE_COLL_CODE = '%s' ";
-        sql = String.format(sql, escuela);
+    public synchronized static String listarCarreras() {
+        String sql = "SELECT CODIGO, DESCRIPCION FROM REGISTRO.REG_GENERAL_CARRERA";
         return sql;
     }
     
     public synchronized static String getDescripcionCarrera(String cod) {
-        String sql = "SELECT SMRPRLE_PROGRAM_DESC AS DESCRIPCION FROM REGISTRO.SMRPRLE WHERE SMRPRLE_PROGRAM = '%s' ";
+        String sql = "SELECT DESCRIPCION FROM REGISTRO.REG_GENERAL_CARRERA WHERE CODIGO = '%s' ";
         sql = String.format(sql, cod);
         return sql;
     }

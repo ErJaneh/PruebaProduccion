@@ -205,17 +205,12 @@
                     
                     <h:panelGrid rendered="#{promocionesController.switchEditar}" columns="3" width="50%" columnClasses="col50,col50,col50">
                         
-                        <ace:textEntry id="ED-descripcion_responsable" label="Descripción responsable" value="#{promocionesController.descripcionResponsablePromocion}" labelPosition="top"  indicatorPosition="right"  style='width:350px; height:20px; font-size: 10pt'
-                                       validatorMessage="Error: Solo caracteres">
-                            <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
-                            <f:validateLength maximum="25"/>
+                        <ace:textEntry id="ED-descripcion_responsable" label="Descripción responsable" value="#{promocionesController.descripcionResponsablePromocion}" labelPosition="top"  indicatorPosition="right"  style='width:350px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form-detalle:ED-descripcion_responsable" render="form-detalle:descripcion_responsableerr"/>
                              <ace:message id="descripcion_responsableerr" for="ED-descripcion_responsable" style="color:red; font-size:15px"/>
                         </ace:textEntry>
                                     
-                        <ace:textEntry id="ED-correo_responsable" label="Correo electronico" value="#{promocionesController.correoResponsablePromocion}" labelPosition="top"  indicatorPosition="right" style='width:300px; height:20px; font-size: 10pt'
-                                       maxlength="50" validatorMessage="Error: Formato de Correo">
-                            <f:validateRequired/>
+                        <ace:textEntry id="ED-correo_responsable" label="Correo electronico" value="#{promocionesController.correoResponsablePromocion}" labelPosition="top"  indicatorPosition="right" style='width:300px; height:20px; font-size: 10pt' maxlength="50">   
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
                             <ace:ajax execute="form-detalle:ED-correo_responsable" render="form-detalle:ED-correo_responsableerr"/>
                             <ace:message id="ED-correo_responsableerr" for="ED-correo_responsable" style="color:red; font-size:15px"/>
@@ -340,25 +335,13 @@
                 <ace:panel id="IngresarPromocionPanel_2" header="Selección de Carreras" style="width: 60%">
                     
                     <h:panelGrid columns="3" width="50%" columnClasses="col50,col25,col25">
-                        
-                        <ace:comboBox id="comboEscuelas2" value="#{promocionesController.codigoEscuelaSeleccionada}" itemValue="#{esc.codigo}" 
-                                      listVar="esc" listValue="#{promocionesController.listaEscuelas}" label="Seleccione una escuela: " 
-                                      valueChangeListener="#{promocionesController.escuelaChange}" labelPosition="top" width="350" 
-                                      style="font-size: 10pt;padding-right: 10px" filterMatchMode="contains">
-                        <f:facet name="row">
-                            <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
-                                <h:outputText value="#{esc.descripcion}"/>                              
-                            </h:panelGrid>
-                        </f:facet>
-                        <ace:ajax execute="form-ingresa-promocion:comboEscuelas2 form-ingresa-promocion:comboCarreras" render="form-ingresa-promocion:comboEscuelas2 form-ingresa-promocion:comboCarreras" />
-                    </ace:comboBox>
-                        
+     
                     <ace:comboBox id="comboCarreras" value="#{promocionesController.codigoCarreraSeleccionada}" itemValue="#{car.codigo}" listVar="car" 
-                                  listValue="#{promocionesController.listaCarreras}" label="Seleccione la carrera: " labelPosition="top" width="310" 
+                                  listValue="#{promocionesController.listaCarreras}" label="Seleccione la carrera: " labelPosition="top" width="490" 
                                   style="font-size: 10pt;" filterMatchMode="contains">
                         <f:facet name="row">
                             <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">                                
-                                <h:outputText value="#{car.descripcion}"/> 
+                                <h:outputText value="#{car.codigo} - #{car.descripcion}"/> 
                             </h:panelGrid>
                         </f:facet>                  
                         <ace:ajax execute="form-ingresa-promocion:comboCarreras" render="form-ingresa-promocion:comboCarreras" />

@@ -22,10 +22,10 @@ public class CarreraBusiness{
         this.carreraDaoImp = new CarreraDaoImp();
     }
     
-    public List<CarreraBean> ListarCarrerasPorEscuela(String esc) throws ExceptionGeneral {
+    public List<CarreraBean> ListarCarreras() throws ExceptionGeneral {
         List<CarreraBean> listaCarreras = null;
         try {
-            listaCarreras = this.carreraDaoImp.ListarCarrerasPorEscuela(esc);
+            listaCarreras = this.carreraDaoImp.ListarCarreras();
         } catch (ExceptionConnection exc) {
             throw new ExceptionGeneral(exc.getMensajeError(), exc.getMensajeTecnico(), 1, false, 1, "carreraBusiness", 1);
         } catch (Exception ex) {

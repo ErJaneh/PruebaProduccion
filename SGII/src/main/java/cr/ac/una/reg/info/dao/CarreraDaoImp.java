@@ -25,17 +25,17 @@ public class CarreraDaoImp extends Connector implements CarreraDao{
     }
     
     @Override
-    public ArrayList<CarreraBean> ListarCarrerasPorEscuela(String escuela) throws ExceptionConnection {
+    public ArrayList<CarreraBean> ListarCarreras() throws ExceptionConnection {
         PreparedStatement prepareStatement = null;
         ArrayList<CarreraBean> arrayCarreraBean = new ArrayList();
         try{
             if (this.openConnection()) {
-                prepareStatement = this.getConexion().prepareStatement(CarreraSQL.listarCarrerasPorEscuela(escuela));
+                prepareStatement = this.getConexion().prepareStatement(CarreraSQL.listarCarreras());
                 ResultSet resultSet = prepareStatement.executeQuery();                
                 while (resultSet.next()) {
                     CarreraBean carrera = new CarreraBean();
                     carrera.setCodigo(resultSet.getString("CODIGO"));
-                    carrera.setDescripcion(resultSet.getString("SMRPRLE_PROGRAM_DESC"));
+                    carrera.setDescripcion(resultSet.getString("DESCRIPCION"));
                     arrayCarreraBean.add(carrera);
                 }//
             }//

@@ -54,43 +54,6 @@
 
     </dependencies>
 
-
-
- <repositories>
-        <repository>
-            <id>maven.oracle.com</id>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://maven.oracle.com</url>
-            <layout>default</layout>
-        </repository>
-        
-        
-        
-        <repository>
-            <id>central</id>
-            <url> http://repo.maven.apache.org/maven2/com/oracle/ojdbc6/12.2.0.1/ojdbc6-12.2.0.1.pom</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        
-        
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven.oracle.com</id>
-            <url>https://maven.oracle.com</url>
-            <releases>
-                <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <plugins>
             <plugin>

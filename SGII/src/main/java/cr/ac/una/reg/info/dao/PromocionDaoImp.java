@@ -55,7 +55,6 @@ public class PromocionDaoImp extends Connector implements PromocionDao {
                         promocion.setCodigoGrupoDeInteres(resultSet.getString("CODIGO_GRUPO_DE_INTERES"));
                         promocion.setCodigoPeriodo(resultSet.getString("CODIGO_PERIODO"));
                         promocion.setCodigoUnidadAcademica(resultSet.getString("CODIGO_UNIDAD_ACADEMICA"));
-                        promocion.setCupos(resultSet.getInt("CUPOS"));
                         promocion.setFechaInicioPromocion(resultSet.getDate("FECHA_INICIO_PROMOCION"));
                         promocion.setFechaFinPromocion(resultSet.getDate("FECHA_FIN_PROMOCION"));
                         promocion.setEstadoPromocion(resultSet.getString("ESTADO_PROMOCION"));
@@ -121,7 +120,6 @@ public class PromocionDaoImp extends Connector implements PromocionDao {
                         promocion.setCodigoGrupoDeInteres(resultSet.getString("CODIGO_GRUPO_DE_INTERES"));
                         promocion.setCodigoPeriodo(resultSet.getString("CODIGO_PERIODO"));
                         promocion.setCodigoUnidadAcademica(resultSet.getString("CODIGO_UNIDAD_ACADEMICA"));
-                        promocion.setCupos(resultSet.getInt("CUPOS"));
                         promocion.setFechaInicioPromocion(resultSet.getDate("FECHA_INICIO_PROMOCION"));
                         promocion.setFechaFinPromocion(resultSet.getDate("FECHA_FIN_PROMOCION"));
                         promocion.setEstadoPromocion(resultSet.getString("ESTADO_PROMOCION"));
@@ -174,11 +172,10 @@ public class PromocionDaoImp extends Connector implements PromocionDao {
                 prepareStatement.setString(4, promocion.getCarrerasPromocion().get(0).getCodigo());
                 prepareStatement.setString(5, promocion.getCodigoPeriodo());
                 prepareStatement.setString(6, promocion.getCodigoUnidadAcademica());
-                prepareStatement.setInt(7, /*p.getCupos()*/ 0);
-                prepareStatement.setString(8, formatter.format(promocion.getFechaInicioPromocion()));
-                prepareStatement.setString(9, formatter.format(promocion.getFechaFinPromocion()));
-                prepareStatement.setString(10, "Disponible para inscripcion");
-                prepareStatement.setInt(11, promocion.getNumeroPromocion());
+                prepareStatement.setString(7, formatter.format(promocion.getFechaInicioPromocion()));
+                prepareStatement.setString(8, formatter.format(promocion.getFechaFinPromocion()));
+                prepareStatement.setString(9, "Disponible para inscripcion");
+                prepareStatement.setInt(10, promocion.getNumeroPromocion());
                 prepareStatement.executeQuery();
                 this.commit();
             }//
@@ -352,73 +349,4 @@ public class PromocionDaoImp extends Connector implements PromocionDao {
         }//  
     }
 
-    @Override
-    public ArrayList<CarreraBean> listarCarrerasPorPromocion(int numeroPromocion) throws ExceptionConnection {
-        PreparedStatement prepareStatement = null;
-        ArrayList<CarreraBean> carreras = new ArrayList();
-        try {
-            if (this.openConnection()) {
-                prepareStatement = this.getConexion().prepareStatement(PromocionSQL.getCarrerasPorPromocion());
-                prepareStatement.setInt(1, numeroPromocion);
-                ResultSet resultSet = prepareStatement.executeQuery();
-                while (resultSet.next()) {
-                    CarreraBean carrera = new CarreraBean();
-                    carrera.setCodigo(resultSet.getString("CODIGO_CARRERA"));
-                    carrera.setDescripcion(resultSet.getString("SMRPRLE_PROGRAM_DESC"));
-                    carreras.add(carrera);
-                }
-            }
-        } catch (ExceptionConnection exc) {
-            throw exc;
-        } catch (SQLException sqlex) {
-            throw new ExceptionConnection("1018:" + "Error al consultar " + sqlex.toString(), sqlex.toString(), 1, true, 3, "promocion");
-        } catch (Exception ex) {
-            throw new ExceptionConnection("1019:" + "Error al consultar " + ex.toString(), ex.toString(), 1, true, 3, "promocion");
-        } finally {
-            if (prepareStatement != null) {
-                try {
-                    prepareStatement.close();
-                    this.closeConnection();
-                } catch (SQLException sqlex) {
-                    throw new ExceptionConnection("1020:" + "Error al cerrar statement", sqlex.toString(), 1, true, 3, "consultar promocion");
-                }//
-            }//
-        }//
-        return carreras;
-    }
-    
-    
-    @Override
-    public ArrayList<CarreraBean> listarCarrerasPorCodPromocion(String codigoPromocion) throws ExceptionConnection {
-        PreparedStatement prepareStatement = null;
-        ArrayList<CarreraBean> carreras = new ArrayList();
-        try {
-            if (this.openConnection()) {
-                prepareStatement = this.getConexion().prepareStatement(PromocionSQL.getCarrerasPorCodPromocion(codigoPromocion));
-                ResultSet resultSet = prepareStatement.executeQuery();
-                while (resultSet.next()) {
-                    CarreraBean carrera = new CarreraBean();
-                    carrera.setCodigo(resultSet.getString("CODIGO_CARRERA"));
-                    carrera.setDescripcion(resultSet.getString("SMRPRLE_PROGRAM_DESC"));
-                    carreras.add(carrera);
-                }
-            }
-        } catch (ExceptionConnection exc) {
-            throw exc;
-        } catch (SQLException sqlex) {
-            throw new ExceptionConnection("1018:" + "Error al consultar " + sqlex.toString(), sqlex.toString(), 1, true, 3, "promocion");
-        } catch (Exception ex) {
-            throw new ExceptionConnection("1019:" + "Error al consultar " + ex.toString(), ex.toString(), 1, true, 3, "promocion");
-        } finally {
-            if (prepareStatement != null) {
-                try {
-                    prepareStatement.close();
-                    this.closeConnection();
-                } catch (SQLException sqlex) {
-                    throw new ExceptionConnection("1020:" + "Error al cerrar statement", sqlex.toString(), 1, true, 3, "consultar promocion");
-                }//
-            }//
-        }//
-        return carreras;
-    }
 }

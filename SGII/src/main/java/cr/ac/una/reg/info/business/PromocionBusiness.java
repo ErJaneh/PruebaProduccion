@@ -7,7 +7,6 @@
  */
 package cr.ac.una.reg.info.business;
 
-import cr.ac.una.reg.info.beans.CarreraBean;
 import cr.ac.una.reg.info.beans.PromocionBean;
 import cr.ac.una.reg.info.beans.ResponsablePromocionBean;
 import cr.ac.una.reg.info.dao.PromocionDaoImp;
@@ -103,27 +102,4 @@ public class PromocionBusiness {
         }
     }
     
-    public List<CarreraBean> listarCarrerasPorPromocion(int numeroPromocion) throws ExceptionGeneral {
-        List<CarreraBean> listaCarreras = null;
-        try {
-            listaCarreras = this.promocionDaoImp.listarCarrerasPorPromocion(numeroPromocion);
-        } catch (ExceptionConnection exc) {
-            throw new ExceptionGeneral(exc.getMensajeError(), exc.getMensajeTecnico(), 1, false, 1, "promocionBusiness", 1);
-        } catch (Exception ex) {
-            throw new ExceptionGeneral("2006:" + "Problemas a consultar los registros ...", ex.toString(), 1, false, 1, "promocionBusiness", 1);
-        }
-        return listaCarreras;
-    }
-    
-    public List<CarreraBean> listarCarrerasPorCodPromocion(String codigoPromocion) throws ExceptionGeneral {
-        List<CarreraBean> listaCarreras = null;
-        try {
-            listaCarreras = this.promocionDaoImp.listarCarrerasPorCodPromocion(codigoPromocion);
-        } catch (ExceptionConnection exc) {
-            throw new ExceptionGeneral(exc.getMensajeError(), exc.getMensajeTecnico(), 1, false, 1, "promocionBusiness", 1);
-        } catch (Exception ex) {
-            throw new ExceptionGeneral("2006:" + "Problemas a consultar los registros ...", ex.toString(), 1, false, 1, "promocionBusiness", 1);
-        }
-        return listaCarreras;
-    }
 }

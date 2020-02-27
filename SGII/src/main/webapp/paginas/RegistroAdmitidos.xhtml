@@ -68,7 +68,7 @@ and open the template in the editor.
                     </ace:column>
 
                     <ace:column id="Carrera1" headerText="Carrera">
-                        <h:outputText id="carrera1_Cell" value="#{item.codigoPromocion1}"/>
+                        <h:outputText id="carrera1_Cell" value="#{item.descripcionCarrera1}"/>
                     </ace:column>
                     
                     <ace:column id="EstadoCarrera1" headerText="Estado Carrera">
@@ -94,7 +94,7 @@ and open the template in the editor.
                     </ace:column>
                     
                     <ace:column id="Carrera2" headerText="Carrera 2" rendered="#{registroAdmitidosController.dobleCarrera}">
-                        <h:outputText id="carrera2_Cell" value="#{item.codigoPromocion2}"/>
+                        <h:outputText id="carrera2_Cell" value="#{item.descripcionCarrera2}"/>
                     </ace:column>
                     
                     <ace:column id="EstadoCarrera2" headerText="Estado Carrera 2" rendered="#{registroAdmitidosController.dobleCarrera}">
