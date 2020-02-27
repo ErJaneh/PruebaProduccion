@@ -81,6 +81,7 @@ public class PromocionesController implements Serializable{
         consultaListaGruposDeInteres();
         consultaPeriodos();
         consultaEscuelas();
+        consultaCarreras();
         promocionPorIngresar.setFechaInicioPromocion(new java.util.Date());
         promocionPorIngresar.setFechaFinPromocion(new java.util.Date());
     }
@@ -174,6 +175,22 @@ public class PromocionesController implements Serializable{
         
     }
     
+    
+    public void consultaCarreras(){
+        try {
+            listaCarreras = carreraBusiness.ListarCarreras();
+        } catch (ExceptionGeneral exg) {
+            WarningBean warningBean = new WarningBean();
+            warningBean.setMensajeSimple(exg.getMensajeError() + exg.toString());
+            this.manejoFacesContext.incluirObjetoSession(warningBean, "warningBean");
+            this.manejoFacesContext.redireccionarFlujoWeb(REDIRECCION_PAG_WARNING);
+        } catch (Exception ex) {
+            WarningBean warningBean = new WarningBean();
+            warningBean.setMensajeSimple("error no capturado..." + ex.toString());
+        }
+        
+    }
+    
     /**
      * Método que valida la fecha de inicio contra la fecha final que se coloque al ingresar una promoción
      * @param context
@@ -208,18 +225,6 @@ public class PromocionesController implements Serializable{
         }
     }
     
-    /**
-     * Método que actualiza la lista de carreras de acuerdo a un comboBox que contiene las escuelas
-     * @param event
-     * @throws ExceptionGeneral 
-     */
-    public void escuelaChange(ValueChangeEvent event) throws ExceptionGeneral {
-        Object value = event.getNewValue();
-        if (value != null) {
-            listaCarreras = carreraBusiness.ListarCarrerasPorEscuela(value.toString());
-        }
-    }
-
     /**
      * Método que agrega una carrera a listaCarrerasSeleccionadas cuando se esta ingresando una promoción
      * @param event

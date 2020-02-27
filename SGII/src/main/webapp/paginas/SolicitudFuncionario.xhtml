@@ -371,7 +371,7 @@
                                         <ace:comboBox id="carrera1" value="#{solicitudFuncionarioController.solicitudBean.codigoPromocion1}" itemValue="#{promo.codigo}" listVar="promo" required="true" requiredMessage="Debe escoger una carrera" listValue="#{solicitudFuncionarioController.carrerasPorPromocion}"  width="300" style="font-size: 10pt;padding-right: 10px">
                                             <f:facet name="row">
                                                 <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
-                                                    <h:outputText value="#{promo.codigo}"/>                              
+                                                    <h:outputText value="#{promo.codigo} - #{promo.descripcion}"/>                              
                                                 </h:panelGrid>
                                             </f:facet>
                                             <ace:ajax event="valueChange" render="carrera2" />
@@ -383,7 +383,7 @@
                                         <ace:comboBox rendered="#{solicitudFuncionarioController.testCarrera2}" id="carrera2" value="#{solicitudFuncionarioController.solicitudBean.codigoPromocion2}" itemValue="#{promo.codigo}" listVar="promo" required="true" requiredMessage="Debe escoger una carrera" listValue="#{solicitudFuncionarioController.carrerasPorPromocion}"  width="300" style="font-size: 10pt;padding-right: 10px">
                                             <f:facet name="row">
                                                 <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
-                                                    <h:outputText value="#{promo.codigo}"/>                              
+                                                    <h:outputText value="#{promo.codigo} - #{promo.descripcion}"/>                              
                                                 </h:panelGrid>
                                             </f:facet>
                                             <ace:ajax event="valueChange" render="carrera2" />
@@ -406,7 +406,7 @@
                                     <!-- Validar Campos e Ingresar Solicitud -->
                                     <!-- *********************************************************************************************************************************************** -->                                    
 
-                                    <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
+                                    <ace:confirmationDialog  id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
                                                             width="330" height="200" position="center" closable="false" header="Confirmación" message="Seguro que desea guardar cambios?">
                                         <center>                 
 

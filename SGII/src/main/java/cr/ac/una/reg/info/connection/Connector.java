@@ -58,8 +58,8 @@ public class Connector {
         try {
             initialContext = new InitialContext();
             this.environmentContext = (Context) initialContext.lookup("java:comp/env");
-                //this.dataSource = (DataSource) environmentContext.lookup("jdbc/banner_QA9x");
-           this.dataSource = (DataSource) environmentContext.lookup("jdbc/banner_QA9x");
+         //       this.dataSource = (DataSource) environmentContext.lookup("jdbc/banner_QA9x");
+           this.dataSource = (DataSource) environmentContext.lookup("jdbc/XELOCAL");
                                                                       
            
             

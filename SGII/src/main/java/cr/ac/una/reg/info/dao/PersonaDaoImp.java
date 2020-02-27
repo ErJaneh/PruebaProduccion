@@ -27,8 +27,6 @@ public class PersonaDaoImp extends Connector implements PersonaDao {
     @Override
     public ArrayList<PersonaBean> ListarPersona(PersonaBean personaBean) throws ExceptionConnection {
         PreparedStatement prepareStatement = null;
-        PreparedStatement prepareStatementTitulo = null;
-        PreparedStatement prepareStatementCategoria = null;
 
         ArrayList<PersonaBean> arrayPersonaBean = new ArrayList<PersonaBean>();
         try {
@@ -47,11 +45,12 @@ public class PersonaDaoImp extends Connector implements PersonaDao {
                     per.setFecha(resultSet.getDate("FECHA_NACIMIENTO"));
                     per.setCodigoColegio(resultSet.getString("CODIGO_COLEGIO"));
                     per.setAnioGraduacionColegio(resultSet.getInt("ANIO_GRADUACION_COLEGIO"));
-                    per.setNotaColegio(resultSet.getInt("NOTA_COLEGIO"));
+                    per.setNotaColegio(resultSet.getFloat("NOTA_COLEGIO"));
                     per.setIndigena(resultSet.getString("INDIGENA").charAt(0));
                     per.setCodigoTerritorio(resultSet.getString("CODIGO_TERRITORIO"));
                     per.setCodigoGrupoIndigena(resultSet.getString("CODIGO_GRUPO_INDIGENA"));
                     per.setTelefono(resultSet.getInt("TELEFONO"));
+                    per.setTelefono2(resultSet.getInt("TELEFONO2"));
                     per.setCorreoElectronico(resultSet.getString("CORREO_ELECTRONICO"));
                     per.setEstadoEnSistema(resultSet.getString("ESTADO_EN_SISTEMA"));
                     arrayPersonaBean.add(per);
@@ -96,10 +95,11 @@ public class PersonaDaoImp extends Connector implements PersonaDao {
                     per.setFecha(resultSet.getDate("FECHA_NACIMIENTO"));
                     per.setCodigoColegio(resultSet.getString("CODIGO_COLEGIO"));
                     per.setAnioGraduacionColegio(resultSet.getInt("ANIO_GRADUACION_COLEGIO"));
-                    per.setNotaColegio(resultSet.getInt("NOTA_COLEGIO"));
+                    per.setNotaColegio(resultSet.getFloat("NOTA_COLEGIO"));
                     per.setIndigena(resultSet.getString("INDIGENA").charAt(0));
                     per.setCodigoTerritorio(resultSet.getString("CODIGO_TERRITORIO"));
                     per.setTelefono(resultSet.getInt("TELEFONO"));
+                    per.setTelefono2(resultSet.getInt("TELEFONO2"));
                     per.setCorreoElectronico(resultSet.getString("CORREO_ELECTRONICO"));
                     per.setCodigoGrupoIndigena(resultSet.getString("CODIGO_GRUPO_INDIGENA"));
                     per.setEstadoEnSistema(resultSet.getString("ESTADO_EN_SISTEMA"));
@@ -141,11 +141,16 @@ public class PersonaDaoImp extends Connector implements PersonaDao {
                 prepareStatement.setString(2, personaBean.getPrimerApellido());
                 prepareStatement.setString(3, personaBean.getSegundoApellido());
                 prepareStatement.setString(4, personaBean.getConocidoComo());
-                prepareStatement.setInt(5, personaBean.getAnioGraduacionColegio());
-                prepareStatement.setInt(6, personaBean.getTelefono());
-                prepareStatement.setString(7, personaBean.getCorreoElectronico());
-                prepareStatement.setString(8, personaBean.getEstadoEnSistema());
-                prepareStatement.setString(9, personaBean.getIdentificacion());
+                prepareStatement.setString(5, personaBean.getCodigoColegio());
+                prepareStatement.setInt(6, personaBean.getAnioGraduacionColegio());
+                prepareStatement.setFloat(7, personaBean.getNotaColegio());
+                prepareStatement.setString(8, personaBean.getCodigoTerritorio());
+                prepareStatement.setString(9, personaBean.getCodigoGrupoIndigena());
+                prepareStatement.setString(10, personaBean.getCorreoElectronico());
+                prepareStatement.setInt(11, personaBean.getTelefono());  
+                prepareStatement.setInt(12, personaBean.getTelefono2());    
+                prepareStatement.setString(13, personaBean.getEstadoEnSistema());
+                prepareStatement.setString(14, personaBean.getIdentificacion());
                 prepareStatement.execute();
                 comm = this.getConexion().prepareStatement("commit");
                 comm.execute();
@@ -186,7 +191,7 @@ public class PersonaDaoImp extends Connector implements PersonaDao {
                 prepareStatement.setString(6, formatter.format(p.getFecha()));
                 prepareStatement.setString(7, p.getCodigoColegio());
                 prepareStatement.setInt(8, p.getAnioGraduacionColegio());
-                prepareStatement.setInt(9, p.getNotaColegio());
+                prepareStatement.setFloat(9, p.getNotaColegio());
                 prepareStatement.setString(10, String.valueOf(p.getIndigena()));
                 prepareStatement.setString(11, p.getCodigoTerritorio());
                 prepareStatement.setString(12, p.getCodigoGrupoIndigena());

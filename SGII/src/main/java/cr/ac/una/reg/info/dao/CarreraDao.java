@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface CarreraDao {
     
-    ArrayList<CarreraBean>ListarCarrerasPorEscuela(String escuela) throws ExceptionConnection;
+    ArrayList<CarreraBean>ListarCarreras() throws ExceptionConnection;
     String getDescripcionCarrera(String codigo) throws ExceptionConnection;
     
 }

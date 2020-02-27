@@ -36,9 +36,6 @@ public interface PromocionDao {
 
     void actualizarPromocion(PromocionBean promocion) throws ExceptionConnection;
     
-    void eliminarResponsablesPromocion(List<ResponsablePromocionBean> responsablesPromocion) throws ExceptionConnection;
-    
-    ArrayList<CarreraBean> listarCarrerasPorPromocion(int numeroPromocion) throws ExceptionConnection;   
-    
-    ArrayList<CarreraBean> listarCarrerasPorCodPromocion(String codigoPromocion) throws ExceptionConnection;   
+    void eliminarResponsablesPromocion(List<ResponsablePromocionBean> responsablesPromocion) throws ExceptionConnection;  
+   
 }

@@ -100,9 +100,9 @@ public class SolicitudFuncionarioController implements Serializable {
         this.solicitudBean = new SolicitudBean();
         consultarProvincias();
         consultarEstadoCivil();
-        //consultarNacionalidad();
-       // consultarColegios();
-       // consultarPromocion();
+        consultarNacionalidad();
+        consultarColegios();
+        consultarPromocion();
         solicitudBean.setCodigoEstadoCivil('S');
         solicitudBean.setCodigoNacionalidad("188");
         colegio = new ColegioBean();
@@ -162,7 +162,13 @@ public class SolicitudFuncionarioController implements Serializable {
      * de una promocion
      */
     public void carrerasPorPromocion() throws ExceptionGeneral{
-         this.carrerasPorPromocion = promocionBusiness.listarCarrerasPorPromocion(promocion);
+         // BUSCAR LAS CARRERAS DESDE LA LISTA DE PROMOCIONES
+         for (PromocionBean promoTemp : listaPromociones) {
+                if (promoTemp.getNumeroPromocion()==promocion) {
+                    carrerasPorPromocion=promoTemp.getCarrerasPromocion();
+                    break;
+                }
+            }
     }
 
     
@@ -234,8 +240,8 @@ public class SolicitudFuncionarioController implements Serializable {
                 && personaBean.getSegundoApellido() != null && personaBean.getFecha() != null
                 && personaBean.getTelefono() != null && solicitudBean.getGenero() != null
                 && personaBean.getCorreoElectronico() != null && solicitudBean.getDireccionExacta() != null
-                && personaBean.getCodigoColegio() != null && personaBean.getAnioGraduacionColegio() != null
-                && personaBean.getNotaColegio() != null;
+                && personaBean.getCodigoColegio() != null && personaBean.getAnioGraduacionColegio() != null;
+  //              && personaBean.getNotaColegio() != null;
     }
 
     /**
@@ -259,7 +265,7 @@ public class SolicitudFuncionarioController implements Serializable {
             }
             
             
-            codigo = promo.getCodigoPromocion() + "-" + solicitudBean.getCodigoPromocion1() + "-" + promo.getNumeroPromocion() + "-";
+            codigo = promo.getCodigoPromocion() + "-" + promo.getNumeroPromocion() + "-";
             consecutivo = solicitudBusiness.recuperarConsecutivo(codigo);
             consecutivo++;
             idSolicitud = codigo + consecutivo;
@@ -287,7 +293,7 @@ public class SolicitudFuncionarioController implements Serializable {
                 }
             }
            // promo.setCodigoPromocion(promo.getCodigoPromocion().substring(0,promo.getCodigoPromocion().indexOf("-", promo.getCodigoPromocion().indexOf("-") + 1)));
-            codigo = promo.getCodigoPromocion() + "-" + solicitudBean.getCodigoPromocion1() + "-" + promo.getNumeroPromocion() + "-";
+            codigo = promo.getCodigoPromocion() + "-" + promo.getNumeroPromocion() + "-";
             consecutivo = solicitudBusiness.recuperarConsecutivo(codigo);
             consecutivo++;
             idSolicitud = codigo + consecutivo;
@@ -341,8 +347,9 @@ public class SolicitudFuncionarioController implements Serializable {
     public void promocionChange(ValueChangeEvent event) throws ExceptionGeneral {
         Object value = event.getNewValue();
         if (value != null) {
-            this.carrerasPorPromocion = promocionBusiness.listarCarrerasPorPromocion((Integer)value);
-            testC();
+            promocion=(Integer)value;
+            carrerasPorPromocion();
+           testC();
         }
        
     }
@@ -397,7 +404,7 @@ public class SolicitudFuncionarioController implements Serializable {
         personaBean.setPrimerApellido("");
         personaBean.setSegundoApellido("");
         personaBean.setAnioGraduacionColegio(null);
-        personaBean.setNotaColegio(null);
+        personaBean.setNotaColegio(0);
         personaBean.setFecha(new java.util.Date());
         personaBean.setCodigoGrupoIndigena(null);
         esIndigena = false;

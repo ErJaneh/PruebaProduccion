@@ -19,56 +19,81 @@
 
                 <br></br>
 
-                <center><div><table><tr><td>
-                                    <ace:dataTable
-                                        id="dataTableListaSolicitudes"
-                                        value="#{consultaPostulantesController.listaPersona}"
-                                        rows="20"
-                                        var="item"
-                                        paginator="true" styleClass="textTabla" paginatorPosition="bottom"
-                                        selectionMode="multiple">
+                <center>
+                    <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->                              
+                    <!--********************************************************************************************************************* -->
+                    <!--Tabla que muestra los datos generales de la persona-->
+                    <!--********************************************************************************************************************* -->
+                    <ace:panel style="width:65%">
+                        <ace:dataTable
+                            id="dataTableListaSolicitudes"
+                            value="#{consultaPostulantesController.listaPersona}"
+                            rows="20"
+                            var="item"
+                            paginator="true" styleClass="textTabla" paginatorPosition="bottom"
+                            selectionMode="multiple"
+                            style="font-size: 10pt">
 
-                                        <ace:ajax event="select" execute="details @this" render="details @this"
-                                                  onSuccess="ice.ace.jq('#details').effect('highlight');" />
+                            <ace:ajax event="select" execute="details @this" render="details @this"
+                                      onSuccess="ice.ace.jq('#details').effect('highlight');" />
 
-                                        <ace:column id="id" headerText="Identificación" sortBy="#{item.identificacion}"
-                                                    filterBy="#{item.identificacion}" filterMatchMode="contains">
-                                            <h:outputText id="idCell" value="#{item.identificacion}"/>
-                                        </ace:column>
-                                        <ace:column id="nombre" headerText="Nombre" sortBy="#{item.nombre}"
-                                                    filterBy="#{item.nombre}" filterMatchMode="contains">
-                                            <h:outputText id="nombreCell" value="#{item.nombre}"/>
-                                        </ace:column>
-                                        <ace:column id="primerApellido" headerText="Apellido 1" sortBy="#{item.primerApellido}"
-                                                    filterBy="#{item.primerApellido}" filterMatchMode="contains">
-                                            <h:outputText id="primerApellidoCell" value="#{item.primerApellido}"/>
-                                        </ace:column>
-                                        <ace:column id="segundoApellido" headerText="Apellido 2" sortBy="#{item.segundoApellido}"
-                                                    filterBy="#{item.segundoApellido}" filterMatchMode="contains">
-                                            <h:outputText id="segundoApellidoCell" value="#{item.segundoApellido}"/>
-                                        </ace:column>
+                            <!-- IDENTIFICIÓN DE LA PERSONA --> 
+                            <ace:column id="id" headerText="Identificación" sortBy="#{item.identificacion}"
+                                        filterBy="#{item.identificacion}" filterMatchMode="contains">
+                                <h:outputText id="idCell" value="#{item.identificacion}"/>
+                            </ace:column>
 
-                                        <ace:column rendered="true">
-                                            <f:facet name="header">
-                                                <h:outputText value="Detalle" styleClass="textTablaCabeza"/>
-                                            </f:facet>
+                            <!-- NOMBRE DE LA PERSONA --> 
+                            <ace:column id="nombre" headerText="Nombre" sortBy="#{item.nombre}"
+                                        filterBy="#{item.nombre}" filterMatchMode="contains">
+                                <h:outputText id="nombreCell" value="#{item.nombre}"/>
+                            </ace:column>
 
-                                            <ace:pushButton id="showModal" value="Mostrar" type="button" style="font-size: 10px" action="#{consultaPostulantesController.mostrarDetalle}">
-                                                <f:setPropertyActionListener value="#{item}" target="#{consultaPostulantesController.personaBeanSelected}" />
-                                                <ace:ajax execute="@this" render="@all" onStart="ice.ace.instance('#{dialog.clientId}').show(); return true;" />
-                                            </ace:pushButton>
-                                        </ace:column>
+                            <!-- PRIMER APELLIDO DE LA PERSONA --> 
+                            <ace:column id="primerApellido" headerText="Apellido 1" sortBy="#{item.primerApellido}"
+                                        filterBy="#{item.primerApellido}" filterMatchMode="contains">
+                                <h:outputText id="primerApellidoCell" value="#{item.primerApellido}"/>
+                            </ace:column>
 
-                                    </ace:dataTable>
-                                </td></tr></table></div></center>
+                            <!-- SEGUNDO APELLIDO DE LA PERSONA --> 
+                            <ace:column id="segundoApellido" headerText="Apellido 2" sortBy="#{item.segundoApellido}"
+                                        filterBy="#{item.segundoApellido}" filterMatchMode="contains">
+                                <h:outputText id="segundoApellidoCell" value="#{item.segundoApellido}"/>
+                            </ace:column>
+
+                            <!-- CORREO DE LA PERSONA --> 
+                            <ace:column id="corre" headerText="Correo" sortBy="#{item.correoElectronico}"
+                                        filterBy="#{item.correoElectronico}" filterMatchMode="contains">
+                                <h:outputText id="correCell" value="#{item.correoElectronico}"/>
+                            </ace:column>
+
+                            <ace:column rendered="true">
+                                <f:facet name="header">
+                                    <h:outputText value="Detalle" styleClass="textTablaCabeza"/>
+                                </f:facet>
+                                <!-- BOTÓN PARA MOSTRAR LOS DETALLES DE LA PERSONA --> 
+                                <ace:pushButton id="showModal" value="Mostrar" type="button" style="font-size: 10px" action="#{consultaPostulantesController.mostrarDetalle}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{consultaPostulantesController.personaBeanSelected}" />
+                                    <ace:ajax execute="@this" render="@all" onStart="ice.ace.instance('#{dialog.clientId}').show(); return true;" />
+                                </ace:pushButton>
+                            </ace:column>
+                        </ace:dataTable>
+                    </ace:panel>
+                </center>
             </h:form>
         </center>
 
+
+
+        <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->                              
+        <!--********************************************************************************************************************* -->
+        <!--Modal para mostrar y editar  los datos de la persona-->
+        <!--********************************************************************************************************************* -->
         <ace:dialog id="modalPostulante" header="Detalle Postulante" binding="#{dialog}" modal="true" showEffect="clip" hideEffect="fade" width="1000"  draggable="false" closable="false">
 
             <h:form id="form-detalle">
 
-
+                <!-- ÁREA DE BOTONES-->  
                 <div style="text-align: right">
 
                     <ace:pushButton rendered="#{consultaPostulantesController.editar}" type="button"  style='background:url("../../images/save.png");width:45px; height:50px;background-repeat: no-repeat;background-position: center' 
@@ -94,6 +119,7 @@
                     </ace:pushButton> 
                 </div>
 
+                <!-- DIALOGO DE CONFIRMACION-->  
                 <ace:confirmationDialog id="guardarDialog" binding="#{guardar}" style="font-size: 15px;align-items: center" draggable="false" modal="true" 
                                         width="330" height="200" position="center" closable="false" header="Confirmación" message="Seguro que desea guardar cambios?">
                     <center>                 
@@ -115,6 +141,8 @@
 
                 <br/>
 
+                <!-- DETALLE DE LA PERSONA-->  
+                <!-- PANEL PARA VER SI LA PERSONA ESTA HABILITADA O DESHABILITADA-->  
                 <ace:panel header="Estado del postulante" styleClass="#{consultaPostulantesController.colorEditar ? '' : 'required-styling-demo'}">
 
                     <h:panelGrid columns="1" width="100%" columnClasses="col100,col100,col100,col100">
@@ -129,7 +157,10 @@
 
                 <br/>
 
-                <ace:panel header="Información Personal" styleClass="#{consultaPostulantesController.colorEditar ? '' : 'required-styling-demo'}" >
+                <!--styleClass="#{consultaPostulantesController.colorEditar ? '' : 'required-styling-demo'}"-->
+
+                <!-- PANEL PARA AGRUPAR LA INFORMACIÓN DE LA INFORMACION PERSONAL DEL POSTULANTE-->
+                <ace:panel header="Información Personal" >
                     <h:panelGrid  columns="2" width="50%" columnClasses="col100,col100,col100,col100">
 
                         <h:outputText value="Identificación: " ></h:outputText>
@@ -138,7 +169,7 @@
                         </ace:textEntry>
 
                         <h:outputText value="Nombre: " ></h:outputText>
-                        <ace:textEntry id="nombre" value="#{consultaPostulantesController.personaBeanSelected.nombre}" disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion"   style=' width:150px; height:20px; font-size: 10pt'
+                        <ace:textEntry id="nombre" value="#{consultaPostulantesController.personaBeanSelected.nombre}" disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion"   style=' width:150px; height:20px; font-size: 10pt'
                                        required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
                             <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
                             <f:validateLength maximum="25"/>
@@ -149,7 +180,7 @@
 
 
                         <h:outputText value="PrimerApellido: " ></h:outputText>
-                        <ace:textEntry id="PrimerApellido"  value="#{consultaPostulantesController.personaBeanSelected.primerApellido}"  disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
+                        <ace:textEntry id="PrimerApellido"  value="#{consultaPostulantesController.personaBeanSelected.primerApellido}"  disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
                                        required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
                             <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
                             <f:validateLength maximum="25"/>
@@ -158,7 +189,7 @@
                         </ace:textEntry>
 
                         <h:outputText value="SegundoApellido " ></h:outputText>
-                        <ace:textEntry id="SegundoApellido"  value="#{consultaPostulantesController.personaBeanSelected.segundoApellido}"  disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
+                        <ace:textEntry id="SegundoApellido"  value="#{consultaPostulantesController.personaBeanSelected.segundoApellido}"  disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
                                        required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo caracteres">
                             <f:validateRegex pattern="[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\s]*" />
                             <f:validateLength maximum="25"/>
@@ -172,20 +203,28 @@
                         </ace:textEntry>
 
                         <h:outputText value="Fecha Nacimiento: " ></h:outputText>
-                        <ace:textEntry id="fechaNacimiento"  value="#{consultaPostulantesController.personaBeanSelected.fecha}"   styleClass="edicion" disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                        <ace:textEntry id="fechaNacimiento"  value="#{consultaPostulantesController.personaBeanSelected.fecha}" requiredIndicator="*"  styleClass="edicion" disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form:fechaNacimiento" render="form:fechaNacimiento"/>
                         </ace:textEntry>
 
                         <h:outputText id="telefonoEditar" value="Teléfono: " ></h:outputText>
-                        <ace:textEntry id="telefono"  value="#{consultaPostulantesController.personaBeanSelected.telefono}"  disabled="#{consultaPostulantesController.mostrarModal}" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
+                        <ace:textEntry id="telefono"  value="#{consultaPostulantesController.personaBeanSelected.telefono}"  disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
                                        required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo Numeros" maxlength="50">
                             <f:convertNumber integerOnly="true" type="number" pattern="#00000000" />
                             <ace:ajax execute="form:telefono" render="telefonoEditarerr"/>
                             <ace:message id="telefonoEditarerr" for="telefono" style="color:red; font-size:15px"/>
                         </ace:textEntry>
 
+                        <h:outputText id="telefonoEditar2" value="Teléfono: " ></h:outputText>
+                        <ace:textEntry id="telefono2"  value="#{consultaPostulantesController.personaBeanSelected.telefono2}"  disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
+                                       required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo Numeros" maxlength="50">
+                            <f:convertNumber integerOnly="true" type="number" pattern="#00000000" />
+                            <ace:ajax execute="form:telefono2" render="telefonoEditarerr2"/>
+                            <ace:message id="telefonoEditarerr2" for="telefono" style="color:red; font-size:15px"/>
+                        </ace:textEntry>
+
                         <h:outputText id="correoEditar" value="Correo: " ></h:outputText>
-                        <ace:textEntry id="correo"  value="#{consultaPostulantesController.personaBeanSelected.correoElectronico}"  disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion" 
+                        <ace:textEntry id="correo"  value="#{consultaPostulantesController.personaBeanSelected.correoElectronico}"  disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion" requiredIndicator="*"
                                        required="true" requiredMessage="Campo Requerido" maxlength="50" validatorMessage="Error: Formato de Correo"  style='  width:150px; height:20px; font-size: 10pt'>
                             <f:validateRequired/>
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
@@ -197,55 +236,78 @@
                 </ace:panel>
 
                 <br/>
-             <!--           
-                <ace:panel header="Dirección" styleClass="#{consultaPostulantesController.colorEditar ? '' : 'required-styling-demo'}">
-                    <h:panelGrid  columns="2" width="50%" columnClasses="col100,col100,col100,col100">
 
-                        <h:outputText value="Provincia: " ></h:outputText>
-                        <ace:textEntry id="Provincia"  value="#{consultaPostulantesController.provincia.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
-                            <ace:ajax execute="form:Provincia" render="form:Provincia"/>
-                        </ace:textEntry>
-
-                        <h:outputText value="Cantón: " ></h:outputText>
-                        <ace:textEntry id="Canton"  value="#{consultaPostulantesController.canton.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
-                            <ace:ajax execute="form:Canton" render="form:Canton"/>
-                        </ace:textEntry>
-
-                        <h:outputText value="Distrito: " ></h:outputText>
-                        <ace:textEntry id="Distrito"  value="#{consultaPostulantesController.distrito.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
-                            <ace:ajax execute="form:Distrito" render="form:Distrito"/>
-                        </ace:textEntry>
-
-                        <h:outputText value="Ubicación: " ></h:outputText>
-                        <ace:textEntry id="ubicacion"  value="#{consultaPostulantesController.solicitudBeanFromPersonaSelected.direccionExacta}" disabled="#{consultaPostulantesController.mostrarModal}"  styleClass="edicion" requiredIndicator="*"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
-                            <ace:ajax execute="form:ubicacion" render="form:ubicacion"/>
-                        </ace:textEntry>
-
-                    </h:panelGrid>
-                </ace:panel> -->
-
-                <br/>
-
+                <!-- PANEL PARA AGRUPAR LA INFORMACIÓN DEL COLEGIO DE PROCEDENCIA, ANNIO DE GRADUACION Y NOTAS DEL POSTULANTE-->
                 <ace:panel header="Colegio">
-                    <h:panelGrid  columns="2" width="50%" columnClasses="col100,col100,col100,col100">
-                        <h:outputText value="Colegio: " ></h:outputText>
-                        <ace:textEntry id="colegio"  value="#{consultaPostulantesController.colegio.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:200px; height:20px; font-size: 10pt'>
+                    <h:panelGrid  columns="2" width="60%" columnClasses="col100,col100,col100,col100">
+                        <h:outputText value="Colegio: " rendered="#{consultaPostulantesController.mostrarModal}" ></h:outputText>
+                        <ace:textEntry id="colegio"  value="#{consultaPostulantesController.colegio.descripcion}" rendered="#{consultaPostulantesController.mostrarModal}" disabled="true"  required="true" requiredIndicator="*" indicatorPosition="right"  style='width:200px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form:colegio" render="form:colegio"/>
                         </ace:textEntry>
 
+                        <h:outputText value="Colegio: " rendered="#{consultaPostulantesController.editar}" ></h:outputText>
+                        <ace:comboBox id="comboColegios" filterMatchMode="contains" itemValue="#{colegios.codigo}" rendered="#{consultaPostulantesController.editar}" listVar="colegios" value="#{consultaPostulantesController.personaBeanSelected.codigoColegio}" listValue="#{consultaPostulantesController.listaColegio}"  width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{colegios.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this"/>
+                        </ace:comboBox>
+
                         <h:outputText value="Graduado en: " ></h:outputText>
-                        <ace:textEntry id="graduacionColegio"  value="#{consultaPostulantesController.personaBeanSelected.anioGraduacionColegio}"  disabled="true" required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                        <ace:textEntry id="graduacionColegio" rendered="#{consultaPostulantesController.mostrarModal}" value="#{consultaPostulantesController.personaBeanSelected.anioGraduacionColegio}"  disabled="true" required="true" requiredIndicator="*" indicatorPosition="right" style='width:150px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form:graduacionColegio" render="form:graduacionColegio"/>
                         </ace:textEntry>
 
+                        <ace:comboBox id="ED-comboAnnioGraduacion" value="#{consultaPostulantesController.personaBeanSelected.anioGraduacionColegio}" rendered="#{consultaPostulantesController.editar}">
+                            <f:selectItem itemValue="2019" itemLabel="2019" />
+                            <f:selectItem itemValue="2018" itemLabel="2018" />
+                            <f:selectItem itemValue="2017" itemLabel="2017" />
+                            <f:selectItem itemValue="2016" itemLabel="2016" />
+                            <f:selectItem itemValue="2015" itemLabel="2015" />
+                            <f:selectItem itemValue="2014" itemLabel="2014" />
+                            <f:selectItem itemValue="2013" itemLabel="2013" />
+                            <f:selectItem itemValue="2012" itemLabel="2012" />
+                            <f:selectItem itemValue="2011" itemLabel="2011" />
+                            <f:selectItem itemValue="2010" itemLabel="2010" />
+                            <f:selectItem itemValue="2009" itemLabel="2009" />
+                            <f:selectItem itemValue="2008" itemLabel="2008" />
+                            <f:selectItem itemValue="2007" itemLabel="2007" />
+                            <f:selectItem itemValue="2006" itemLabel="2006" />
+                            <f:selectItem itemValue="2005" itemLabel="2005" />
+                            <f:selectItem itemValue="2004" itemLabel="2004" />
+                            <f:selectItem itemValue="2003" itemLabel="2003" />
+                            <f:selectItem itemValue="2002" itemLabel="2002" />
+                            <f:selectItem itemValue="2001" itemLabel="2001" />
+                            <f:selectItem itemValue="2000" itemLabel="2000" />
+                            <f:selectItem itemValue="1999" itemLabel="1999" />
+                            <f:selectItem itemValue="1998" itemLabel="1998" />
+                            <f:selectItem itemValue="1997" itemLabel="1997" />
+                            <f:selectItem itemValue="1996" itemLabel="1996" />
+                            <f:selectItem itemValue="1995" itemLabel="1995" />
+                            <f:selectItem itemValue="1994" itemLabel="1994" />
+                            <f:selectItem itemValue="1993" itemLabel="1993" />
+                            <f:selectItem itemValue="1992" itemLabel="1992" />
+                            <f:selectItem itemValue="1991" itemLabel="1991" />
+                            <f:selectItem itemValue="1990" itemLabel="1990" />
+                            <ace:ajax execute="@all" render="@all" />
+                        </ace:comboBox>
+
                         <h:outputText value="Nota Colegio: " ></h:outputText>
-                        <ace:textEntry id="notaColegio"  value="#{consultaPostulantesController.personaBeanSelected.notaColegio}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
-                            <ace:ajax execute="form:notaColegio" render="form:notaColegio"/>
+
+                        <ace:textEntry id="notaCole"  value="#{consultaPostulantesController.personaBeanSelected.notaColegio}"  disabled="#{consultaPostulantesController.mostrarModal}" requiredIndicator="*" indicatorPosition="right" styleClass="edicion" style='  width:150px; height:20px; font-size: 10pt'
+                                       required="true" requiredMessage="Campo Requerido" validatorMessage="Error: Solo Numeros" maxlength="50">
+                            <f:convertNumber integerOnly="true" type="float" pattern="#0.0" />
+                            <ace:ajax execute="form:notaCole" render="notaEditarerr"/>
+                            <ace:message id="notaEditarerr" for="notaCole" style="color:red; font-size:15px"/>
                         </ace:textEntry>
                     </h:panelGrid>
                 </ace:panel>
 
                 <br/>
+
+                <!-- PANEL PARA AGRUPAR LA INFORMACIÓN DEL GRUPO INDIGENA Y TERRITORIO AL QUE PERTENECE-->
 
                 <ace:panel header="Misc" visible="#{consultaPostulantesController.indigena}">
 
@@ -255,20 +317,56 @@
                             <ace:ajax execute="form:checkIndigena" render="form:checkIndigena"/>
                         </ace:checkboxButton>
 
-                        <h:outputText value="Territorio: " ></h:outputText>
-                        <ace:textEntry id="territorio"  value="#{consultaPostulantesController.territorioIndigenaSelected.descripcion}"  disabled="true" required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                        <h:outputText value="Territorio: " rendered="#{consultaPostulantesController.mostrarModal}"></h:outputText>
+                        <ace:textEntry id="territorio"  value="#{consultaPostulantesController.territorioIndigenaSelected.descripcion}" rendered="#{consultaPostulantesController.mostrarModal}" disabled="true" required="true" requiredIndicator="*" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form:territorio" render="form:territorio"/>
                         </ace:textEntry>
 
-                        <h:outputText value="Grupo Indígena: " ></h:outputText>
-                        <ace:textEntry id="grupo"  value="#{consultaPostulantesController.grupoIndigenaSelected.descripcion}"  disabled="true"  required="true" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
+                        <h:outputText value="Territorio: " rendered="#{consultaPostulantesController.editar}" ></h:outputText>
+                        <ace:comboBox id="comboTerritorios" filterMatchMode="contains" itemValue="#{territorios.codigo}" rendered="#{consultaPostulantesController.editar}" listVar="territorios" value="#{consultaPostulantesController.personaBeanSelected.codigoTerritorio}" listValue="#{consultaPostulantesController.listaTerritorio}"  width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{territorios.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this"/>
+                        </ace:comboBox>
+
+                        <h:outputText value="Grupo Indígena: " rendered="#{consultaPostulantesController.mostrarModal}" ></h:outputText>
+                        <ace:textEntry id="grupo"  value="#{consultaPostulantesController.grupoIndigenaSelected.descripcion}" rendered="#{consultaPostulantesController.mostrarModal}" disabled="true"  required="true" requiredIndicator="*" indicatorPosition="right"  style='width:150px; height:20px; font-size: 10pt'>
                             <ace:ajax execute="form:grupo" render="form:grupo"/>
                         </ace:textEntry>
 
+                        <h:outputText value="Grupo: " rendered="#{consultaPostulantesController.editar}" ></h:outputText>
+
+                        <ace:comboBox rendered="#{consultaPostulantesController.editar}" id="comboGrupos" itemValue="#{grupos.codigo}" value="#{consultaPostulantesController.personaBeanSelected.codigoGrupoIndigena}"
+                                      listVar="grupos"  listValue="#{consultaPostulantesController.listaGrupo}"
+                                      filterMatchMode="contains" width="350" style="font-size: 10pt;padding-right: 10px">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{grupos.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this"/>
+                        </ace:comboBox>
+                        
+                        
+                         <ace:comboBox rendered="#{mantenimientoSolicitudController.editar}" id="comboPromocion1"  itemValue="#{carrera.codigo}" value="#{mantenimientoSolicitudController.carrera1}" 
+                                      listVar="carrera" listValue="#{mantenimientoSolicitudController.carrerasPorPromocion}" label="Carrera 1: " labelPosition="top" 
+                                      width="300" style="font-size: 10pt" filterMatchMode="contains">
+                            <f:facet name="row">
+                                <h:panelGrid columns="3" width="100%" columnClasses="col50,col25,col25">
+                                    <h:outputText value="#{carrera.descripcion}"/>                              
+                                </h:panelGrid>
+                            </f:facet>
+                            <ace:ajax execute="@this" render="@this" />
+                        </ace:comboBox>
+                        
                     </h:panelGrid>
                 </ace:panel>
             </h:form>
         </ace:dialog>
+        <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->   
 
 
         <div class="footer">
